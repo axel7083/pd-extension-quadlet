@@ -1,9 +1,13 @@
 import type { ExtensionContext } from '@podman-desktop/api';
+import { extensions, provider, process as processApi, env } from '@podman-desktop/api';
 import * as extensionApi from '@podman-desktop/api';
 import fs from 'node:fs';
 import { RpcExtension } from '/@shared/src/messages/MessageProxy';
-import { HelloWorldApiImpl } from './api-impl';
-import { HelloWorldApi } from '/@shared/src/HelloWorldApi';
+import { QuadletApiImpl } from './services/quadlet-api-impl';
+import { QuadletService } from './services/quadlet-service';
+import { QuadletApi } from '/@shared/src/apis/quadlet-api';
+import { SystemdService } from './services/systemd-service';
+import { PodmanService } from './services/podman-service';
 
 /**
  * Below is the "typical" extension.ts file that is used to activate and deactrivate the extension.
@@ -67,8 +71,41 @@ export async function activate(extensionContext: ExtensionContext): Promise<void
   rpcExtension.init();
   extensionContext.subscriptions.push(rpcExtension);
 
-  const helloWorldApi = new HelloWorldApiImpl(extensionContext);
-  rpcExtension.registerInstance<HelloWorldApi>(HelloWorldApi, helloWorldApi);
+  // The Podman Service is responsible for communicating with the podman extension
+  const podman = new PodmanService({
+    env,
+    extensions,
+    processApi: processApi,
+    providers: provider,
+  });
+  podman.init();
+  extensionContext.subscriptions.push(podman);
+
+  // systemd service is responsible for communicating with the systemd in the podman machine
+  const systemd = new SystemdService({
+    podman,
+  });
+  systemd.init();
+  extensionContext.subscriptions.push(systemd);
+
+  // quadlet service is responsible for interacting with the Quadlet CLI
+  const quadletService = new QuadletService({
+    systemd,
+    podman,
+    webview: panel.webview,
+    env: env,
+    providers: provider,
+  });
+  quadletService.init();
+  extensionContext.subscriptions.push(quadletService);
+
+  // registering the api for the frontend IPCs
+  const quadletApiImpl = new QuadletApiImpl({
+    quadlet: quadletService,
+    systemd: systemd,
+    podman: podman,
+  });
+  rpcExtension.registerInstance<QuadletApi>(QuadletApi, quadletApiImpl);
 }
 
 export async function deactivate(): Promise<void> {

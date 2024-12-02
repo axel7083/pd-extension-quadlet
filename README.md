@@ -20,7 +20,7 @@ With this template, it's as easy as:
 
 Tips for using this template:
 * Every section is heavily commented to aid understanding. Start with the `backend`, then move on to the `frontend`, and finally explore the `shared` package.
-* Adding a new function to connect the frontend and backend requires updates to both `packages/backend/src/api-impl.ts` and `packages/shared/src/HelloWorldApi.ts`.
+* Adding a new function to connect the frontend and backend requires updates to both `packages/backend/src/api-impl.ts` and `packages/shared/src/QuadletAPI.ts`.
 
 ![hello world](/images/helloworld.png)
 ![hello world notification](/images/helloworld_notification.png)

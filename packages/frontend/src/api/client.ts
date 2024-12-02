@@ -1,4 +1,4 @@
-import { HelloWorldApi } from '/@shared/src/HelloWorldApi';
+import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import { RpcBrowser } from '/@shared/src/messages/MessageProxy';
 
 /**
@@ -11,7 +11,7 @@ export interface RouterState {
 }
 const podmanDesktopApi = acquirePodmanDesktopApi();
 export const rpcBrowser: RpcBrowser = new RpcBrowser(window, podmanDesktopApi);
-export const helloWorldClient: HelloWorldApi = rpcBrowser.getProxy(HelloWorldApi);
+export const quadletAPI: QuadletApi = rpcBrowser.getProxy(QuadletApi);
 
 // The below code is used to save the state of the router in the podmanDesktopApi, so
 // that we can determine the correct route to display when the extension is reloaded.
@@ -28,3 +28,7 @@ export const getRouterState = (): RouterState => {
   if (isRouterState(state)) return state;
   return { url: '/' };
 };
+
+Object.defineProperty(window, 'quadletAPI', {
+  value: quadletAPI,
+});

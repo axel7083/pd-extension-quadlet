@@ -1,3 +1,7 @@
+/**
+ * @author axel7083
+ */
+
 import { test, expect, beforeAll, vi } from 'vitest';
 import { RpcBrowser, RpcExtension } from './MessageProxy';
 import type { Webview } from '@podman-desktop/api';

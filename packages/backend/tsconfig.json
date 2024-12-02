@@ -19,7 +19,10 @@
     ],
     "paths": {
       "/@shared/*": ["../shared/*"]
-    }
+    },
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
   },
   "include": [
     "src",
