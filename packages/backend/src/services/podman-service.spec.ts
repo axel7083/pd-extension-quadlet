@@ -6,13 +6,16 @@ import type {
   Extension,
   extensions,
   process as processApi,
-  provider,
-  ProviderContainerConnection, RunError, RunResult, Uri,
+  ProviderContainerConnection,
+  RunError,
+  RunResult,
+  Uri,
 } from '@podman-desktop/api';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { PodmanService } from './podman-service';
 import type { PodmanExtensionApi } from '@podman-desktop/podman-extension-api';
 import { PODMAN_EXTENSION_ID } from '../utils/constants';
+import type { ProviderService } from './provider-service';
 
 const extensionsMock: typeof extensions = {
   getExtension: vi.fn(),
@@ -29,13 +32,9 @@ const podmanExtensionApiMock: Extension<PodmanExtensionApi> = {
   },
 };
 
-const processApiMock: typeof processApi = {
+const processApiMock: typeof processApi = {} as unknown as typeof processApi;
 
-} as unknown as typeof processApi;
-
-const providersMock: typeof provider = {
-
-} as unknown as typeof provider;
+const providersMock: ProviderService = {} as ProviderService;
 
 const WSL_PROVIDER_CONNECTION_MOCK: ProviderContainerConnection = {
   connection: {
@@ -57,11 +56,7 @@ beforeEach(() => {
   vi.mocked(podmanExtensionApiMock.exports.exec).mockResolvedValue(RUN_RESULT_MOCK);
 });
 
-function getPodmanService(options?: {
-  isLinux?: boolean,
-  isMac?: boolean,
-  isWindows?: boolean,
-}): PodmanService {
+function getPodmanService(options?: { isLinux?: boolean; isMac?: boolean; isWindows?: boolean }): PodmanService {
   return new PodmanService({
     env: {
       isLinux: options?.isLinux ?? false,
@@ -82,9 +77,7 @@ test('init should subscribe to extensions events', async () => {
   const podman = getPodmanService();
   await podman.init();
 
-  expect(extensionsMock.onDidChange).toHaveBeenCalledWith(
-    expect.any(Function),
-  );
+  expect(extensionsMock.onDidChange).toHaveBeenCalledWith(expect.any(Function));
 
   podman.dispose();
   expect(disposeMock).toHaveBeenCalledOnce();
@@ -106,17 +99,11 @@ test('quadletExec should execute in podman machine on windows', async () => {
   const podman = getPodmanService({
     isWindows: true,
   });
-  const result = await podman.quadletExec(WSL_PROVIDER_CONNECTION_MOCK, [
-    '-user -dryrun',
-  ]);
+  const result = await podman.quadletExec(WSL_PROVIDER_CONNECTION_MOCK, ['-user -dryrun']);
 
   expect(result).toStrictEqual(RUN_RESULT_MOCK);
   expect(podmanExtensionApiMock.exports.exec).toHaveBeenCalledWith(
-    [
-      'machine',
-      'ssh',
-      '/usr/libexec/podman/quadlet -user -dryrun',
-    ],
+    ['machine', 'ssh', '/usr/libexec/podman/quadlet -user -dryrun'],
     {
       connection: WSL_PROVIDER_CONNECTION_MOCK,
     },

@@ -1,5 +1,6 @@
 import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import { RpcBrowser } from '/@shared/src/messages/MessageProxy';
+import { ProviderApi } from '/@shared/src/apis/provide-api';
 
 /**
  * This file is the client side of the API. It is used to communicate with the backend, which allows
@@ -12,6 +13,7 @@ export interface RouterState {
 const podmanDesktopApi = acquirePodmanDesktopApi();
 export const rpcBrowser: RpcBrowser = new RpcBrowser(window, podmanDesktopApi);
 export const quadletAPI: QuadletApi = rpcBrowser.getProxy(QuadletApi);
+export const providerAPI: ProviderApi = rpcBrowser.getProxy(ProviderApi);
 
 // The below code is used to save the state of the router in the podmanDesktopApi, so
 // that we can determine the correct route to display when the extension is reloaded.
@@ -29,6 +31,13 @@ export const getRouterState = (): RouterState => {
   return { url: '/' };
 };
 
+/**
+ * Making clients available as global properties
+ */
 Object.defineProperty(window, 'quadletAPI', {
   value: quadletAPI,
+});
+
+Object.defineProperty(window, 'providerAPI', {
+  value: providerAPI,
 });

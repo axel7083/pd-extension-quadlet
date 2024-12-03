@@ -1,22 +1,14 @@
 /**
  * @author axel7083
  */
-import type {
-  env,
-  extensions as Extensions,
-  process as ProcessApi,
-  process as ProcessCore,
-  provider as Provider,
-  ProviderContainerConnection,
-} from '@podman-desktop/api';
+import type { env, extensions as Extensions, process as ProcessApi, process as ProcessCore } from '@podman-desktop/api';
 import type { PodmanExtensionApi } from '@podman-desktop/podman-extension-api';
 import { PODMAN_EXTENSION_ID } from '../utils/constants';
-import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
-import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
+import type { ProviderService } from './provider-service';
 
 export interface PodmanDependencies {
   extensions: typeof Extensions;
-  providers: typeof Provider;
+  providers: ProviderService;
   env: typeof env;
   processApi: typeof ProcessApi;
 }
@@ -66,28 +58,5 @@ export abstract class PodmanHelper {
     }
 
     return podman.exports;
-  }
-
-  public allProviderContainerConnectionInfo(): ProviderContainerConnectionDetailedInfo[] {
-    return this.dependencies.providers.getContainerConnections().map((connectionInfo: ProviderContainerConnection) => ({
-      providerId: connectionInfo.providerId,
-      name: connectionInfo.connection.name,
-      status: connectionInfo.connection.status(),
-      vmType: connectionInfo.connection.vmType,
-    }));
-  }
-
-  public getProviderContainerConnection({
-    providerId,
-    name,
-  }: ProviderContainerConnectionIdentifierInfo): ProviderContainerConnection {
-    const provider = this.dependencies.providers
-      .getContainerConnections()
-      .find(connection => connection.providerId === providerId && connection.connection.name === name);
-    if (!provider)
-      throw new Error(
-        `cannot find provider container connection with providerId ${providerId} and connection name ${name}`,
-      );
-    return provider;
   }
 }

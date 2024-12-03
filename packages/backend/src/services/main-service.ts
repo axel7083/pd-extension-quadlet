@@ -18,6 +18,9 @@ import { QuadletService } from './quadlet-service';
 import { QuadletApiImpl } from '../apis/quadlet-api-impl';
 import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import type { AsyncInit } from '../utils/async-init';
+import { ProviderApiImpl } from '../apis/provider-api-impl';
+import { ProviderApi } from '/@shared/src/apis/provide-api';
+import { ProviderService } from './provider-service';
 
 interface Dependencies {
   extensionContext: ExtensionContext;
@@ -38,6 +41,9 @@ export class MainService implements Disposable, AsyncInit {
   }
 
   async init(): Promise<void> {
+    /**
+     * Creating and init Services
+     */
     // init webview
     const webview = new WebviewService({
       extensionUri: this.dependencies.extensionContext.extensionUri,
@@ -51,12 +57,17 @@ export class MainService implements Disposable, AsyncInit {
     rpcExtension.init();
     this.#disposables.push(rpcExtension);
 
+    const providers = new ProviderService({
+      providers: this.dependencies.providers,
+      webview: webview.getPanel().webview,
+    });
+
     // The Podman Service is responsible for communicating with the podman extension
     const podman = new PodmanService({
       env: this.dependencies.env,
       extensions: this.dependencies.extensions,
       processApi: this.dependencies.processApi,
-      providers: this.dependencies.providers,
+      providers: providers,
     });
     await podman.init();
     this.#disposables.push(podman);
@@ -79,12 +90,24 @@ export class MainService implements Disposable, AsyncInit {
     await quadletService.init();
     this.#disposables.push(quadletService);
 
-    // registering the api for the frontend IPCs
+    /**
+     * Creating the api for the frontend IPCs
+     */
+
+    // quadlet api
     const quadletApiImpl = new QuadletApiImpl({
       quadlet: quadletService,
       systemd: systemd,
       podman: podman,
+      providers: providers,
     });
     rpcExtension.registerInstance<QuadletApi>(QuadletApi, quadletApiImpl);
+
+    // provider api
+    const providerApiImpl = new ProviderApiImpl({
+      podman: podman,
+      providers: providers,
+    });
+    rpcExtension.registerInstance<ProviderApi>(ProviderApi, providerApiImpl);
   }
 }

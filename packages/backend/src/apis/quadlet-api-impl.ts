@@ -8,11 +8,13 @@ import type { QuadletService } from '../services/quadlet-service';
 import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
 import type { SystemdService } from '../services/systemd-service';
 import type { PodmanService } from '../services/podman-service';
+import type { ProviderService } from '../services/provider-service';
 
 interface Dependencies {
   quadlet: QuadletService;
   systemd: SystemdService;
   podman: PodmanService;
+  providers: ProviderService;
 }
 
 export class QuadletApiImpl extends QuadletApi {
@@ -29,7 +31,7 @@ export class QuadletApiImpl extends QuadletApi {
   }
 
   override async start(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean> {
-    const providerConnection = this.dependencies.podman.getProviderContainerConnection(connection);
+    const providerConnection = this.dependencies.providers.getProviderContainerConnection(connection);
     try {
       return await this.dependencies.systemd.start({
         service: id,
@@ -42,7 +44,7 @@ export class QuadletApiImpl extends QuadletApi {
   }
 
   override async stop(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean> {
-    const providerConnection = this.dependencies.podman.getProviderContainerConnection(connection);
+    const providerConnection = this.dependencies.providers.getProviderContainerConnection(connection);
     try {
       return await this.dependencies.systemd.stop({
         service: id,
