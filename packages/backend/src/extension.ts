@@ -2,7 +2,7 @@
  * @author axel7083
  */
 import type { ExtensionContext } from '@podman-desktop/api';
-import { extensions, provider, process as processApi, env, window } from '@podman-desktop/api';
+import { extensions, provider, process as processApi, env, window, cli as cliApi } from '@podman-desktop/api';
 import { MainService } from './services/main-service';
 
 // Initialize the activation of the extension.
@@ -16,6 +16,7 @@ export async function activate(extensionContext: ExtensionContext): Promise<void
     extensions,
     processApi: processApi,
     providers: provider,
+    cliApi: cliApi,
   });
   return main.init();
 }

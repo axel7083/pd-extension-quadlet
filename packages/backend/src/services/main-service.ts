@@ -9,6 +9,7 @@ import type {
   process as processApi,
   provider,
   window,
+  cli as cliApi,
 } from '@podman-desktop/api';
 import { WebviewService } from './webview-service';
 import { RpcExtension } from '/@shared/src/messages/MessageProxy';
@@ -21,6 +22,8 @@ import type { AsyncInit } from '../utils/async-init';
 import { ProviderApiImpl } from '../apis/provider-api-impl';
 import { ProviderApi } from '/@shared/src/apis/provide-api';
 import { ProviderService } from './provider-service';
+import { PodletCliService } from './podlet-cli-service';
+import { Octokit } from '@octokit/rest';
 
 interface Dependencies {
   extensionContext: ExtensionContext;
@@ -29,6 +32,7 @@ interface Dependencies {
   extensions: typeof extensions;
   processApi: typeof processApi;
   providers: typeof provider;
+  cliApi: typeof cliApi;
 }
 
 export class MainService implements Disposable, AsyncInit {
@@ -57,10 +61,24 @@ export class MainService implements Disposable, AsyncInit {
     rpcExtension.init();
     this.#disposables.push(rpcExtension);
 
+    const podletCli = new PodletCliService({
+      cliApi: this.dependencies.cliApi,
+      env: this.dependencies.env,
+      window: this.dependencies.window,
+      processApi: this.dependencies.processApi,
+      storagePath: this.dependencies.extensionContext.storagePath,
+      octokit: new Octokit(),
+    });
+    await podletCli.init();
+    this.#disposables.push(podletCli);
+
+    // The provider service register subscribers events for provider updates
     const providers = new ProviderService({
       providers: this.dependencies.providers,
       webview: webview.getPanel().webview,
     });
+    await providers.init();
+    this.#disposables.push(providers);
 
     // The Podman Service is responsible for communicating with the podman extension
     const podman = new PodmanService({
