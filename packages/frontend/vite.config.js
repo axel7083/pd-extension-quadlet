@@ -16,6 +16,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
+      '/@store/': join(PACKAGE_ROOT, 'src', 'stores') + '/',
       '/@shared/': join(PACKAGE_ROOT, '../shared') + '/',
     },
   },

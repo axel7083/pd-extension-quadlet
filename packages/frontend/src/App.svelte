@@ -6,9 +6,10 @@ import { router } from 'tinro';
 import Route from './lib/Route.svelte';
 import { onMount } from 'svelte';
 import { getRouterState } from './api/client';
-import HelloWorld from './HelloWorld.svelte';
+import QuadletDetails from '/@/pages/QuadletDetails.svelte';
+import QuadletsList from '/@/pages/QuadletsList.svelte';
+import QuadletCreate from '/@/pages/QuadletCreate.svelte';
 
-// Using our router instance, we can determine if the application has been mounted.
 router.mode.hash();
 let isMounted = false;
 
@@ -20,19 +21,22 @@ onMount(() => {
 });
 </script>
 
-<!--
-  This is the main application component. It is the root component of the application.
-  It is responsible for rendering the application layout and routing the application to the correct page.
-
-  For example, the main page of the application is the "HelloWorld" svelte component.$derived
-
-  This can be expanded more by including more Route paths which the application can navigate too, for example /about, /contact etc.
--->
-<Route path="/*" breadcrumb="Hello World" isAppMounted={isMounted} let:meta>
+<Route path="/*" breadcrumb="" isAppMounted={isMounted} let:meta>
   <main class="flex flex-col w-screen h-screen overflow-hidden bg-[var(--pd-content-bg)]">
     <div class="flex flex-row w-full h-full overflow-hidden">
-      <Route path="/" breadcrumb="Hello World Page">
-        <HelloWorld />
+      <!-- list all quadlets -->
+      <Route path="/" breadcrumb="Quadlets">
+        <QuadletsList />
+      </Route>
+
+      <!-- create quadlet -->
+      <Route path="/quadlets/create" firstmatch let:meta>
+        <QuadletCreate/>
+      </Route>
+
+      <!-- quadlets details -->
+      <Route path="/quadlets/:providerId/:connection/:id/*" firstmatch let:meta>
+        <QuadletDetails providerId={meta.params.providerId} connection={meta.params.connection} id={meta.params.id}/>
       </Route>
     </div>
   </main>

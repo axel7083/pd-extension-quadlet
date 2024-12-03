@@ -41,6 +41,7 @@
     "humanize-duration": "^3.32.1",
     "jsdom": "^24.1.1",
     "moment": "^2.30.1",
+    "monaco-editor": "^0.52.0",
     "postcss": "^8.4.41",
     "postcss-load-config": "^6.0.1",
     "prettier": "^3.3.3",
@@ -51,6 +52,7 @@
     "svelte-preprocess": "^6.0.2",
     "tailwindcss": "^3.4.10",
     "vite": "^5.4.1",
-    "vitest": "^2.0.2"
+    "vitest": "^2.0.2",
+    "svelte-select": "^5.8.3"
   }
 }
