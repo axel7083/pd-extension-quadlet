@@ -8,8 +8,9 @@ import { QuadletHelper } from './quadlet-helper';
 import { QuadletDryRunParser } from '../utils/parsers/quadlet-dryrun-parser';
 import type { Quadlet } from '../models/quadlet';
 import type { QuadletInfo } from '/@shared/src/models/quadlet-info';
+import type { AsyncInit } from '../utils/async-init';
 
-export class QuadletService extends QuadletHelper implements Disposable {
+export class QuadletService extends QuadletHelper implements Disposable, AsyncInit {
   #value: Map<ProviderContainerConnection, Quadlet[]>;
   #extensionsEventDisposable: Disposable | undefined;
 
@@ -37,7 +38,7 @@ export class QuadletService extends QuadletHelper implements Disposable {
     }, [] as QuadletInfo[]);
   }
 
-  init(): void {
+  async init(): Promise<void> {
     this.collectPodmanQuadlet().catch(console.error);
   }
 
@@ -154,5 +155,6 @@ export class QuadletService extends QuadletHelper implements Disposable {
   dispose(): void {
     this.#value.clear();
     this.#extensionsEventDisposable?.dispose();
+    this.#extensionsEventDisposable = undefined;
   }
 }

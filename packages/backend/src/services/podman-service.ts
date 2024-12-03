@@ -4,15 +4,16 @@
 import type { Disposable, ProviderContainerConnection, RunError, RunResult } from '@podman-desktop/api';
 import type { PodmanDependencies } from './podman-helper';
 import { PodmanHelper } from './podman-helper';
+import type { AsyncInit } from '../utils/async-init';
 
-export class PodmanService extends PodmanHelper implements Disposable {
+export class PodmanService extends PodmanHelper implements Disposable, AsyncInit {
   #extensionsEventDisposable: Disposable | undefined;
 
   constructor(dependencies: PodmanDependencies) {
     super(dependencies);
   }
 
-  init(): void {
+  async init(): Promise<void> {
     // track if podman extension is disabled
     this.#extensionsEventDisposable = this.dependencies.extensions.onDidChange(() => {
       this.resetPodmanExtensionApiCache(); // reset podman cache
@@ -85,18 +86,17 @@ export class PodmanService extends PodmanHelper implements Disposable {
    * @param args
    */
   async systemctlExec(connection: ProviderContainerConnection, args: string[]): Promise<RunResult> {
-    try {
-      return this.internalExecute({
-        connection,
-        command: 'systemctl',
-        args: args,
-      });
-    } catch (err: unknown) {
-      if (!err || typeof err !== 'object' || 'exitCode' in err) {
+    return this.internalExecute({
+      connection,
+      command: 'systemctl',
+      args: args,
+    }).catch((err: unknown) => {
+      // check err is an RunError
+      if (!err || typeof err !== 'object' || !('exitCode' in err)) {
         throw err;
       }
       return err as RunError;
-    }
+    });
   }
 
   dispose(): void {

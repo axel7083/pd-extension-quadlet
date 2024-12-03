@@ -2,7 +2,7 @@
  * @author axel7083
  */
 
-export interface ProviderContainerConnectionInfo {
+export interface ProviderContainerConnectionIdentifierInfo {
   providerId: string;
   name: string;
 }

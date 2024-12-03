@@ -11,7 +11,8 @@ import type {
 } from '@podman-desktop/api';
 import type { PodmanExtensionApi } from '@podman-desktop/podman-extension-api';
 import { PODMAN_EXTENSION_ID } from '../utils/constants';
-import type { ProviderContainerConnectionInfo } from '/@shared/src/apis/provider-container-connection-info';
+import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
+import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
 
 export interface PodmanDependencies {
   extensions: typeof Extensions;
@@ -67,10 +68,19 @@ export abstract class PodmanHelper {
     return podman.exports;
   }
 
+  public allProviderContainerConnectionInfo(): ProviderContainerConnectionDetailedInfo[] {
+    return this.dependencies.providers.getContainerConnections().map((connectionInfo: ProviderContainerConnection) => ({
+      providerId: connectionInfo.providerId,
+      name: connectionInfo.connection.name,
+      status: connectionInfo.connection.status(),
+      vmType: connectionInfo.connection.vmType,
+    }));
+  }
+
   public getProviderContainerConnection({
     providerId,
     name,
-  }: ProviderContainerConnectionInfo): ProviderContainerConnection {
+  }: ProviderContainerConnectionIdentifierInfo): ProviderContainerConnection {
     const provider = this.dependencies.providers
       .getContainerConnections()
       .find(connection => connection.providerId === providerId && connection.connection.name === name);

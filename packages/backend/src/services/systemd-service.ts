@@ -4,13 +4,14 @@
 import type { Disposable, ProviderContainerConnection } from '@podman-desktop/api';
 import type { SystemdServiceDependencies } from './systemd-helper';
 import { SystemdHelper } from './systemd-helper';
+import type { AsyncInit } from '../utils/async-init';
 
-export class SystemdService extends SystemdHelper implements Disposable {
+export class SystemdService extends SystemdHelper implements Disposable, AsyncInit {
   constructor(dependencies: SystemdServiceDependencies) {
     super(dependencies);
   }
 
-  init(): void {}
+  async init(): Promise<void> {}
 
   async getSystemctlVersion(provider: ProviderContainerConnection): Promise<string> {
     const result = await this.podman.systemctlExec(provider, ['--version']);

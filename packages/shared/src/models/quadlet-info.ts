@@ -1,7 +1,7 @@
 /**
  * @author axel7083
  */
-import type { ProviderContainerConnectionInfo } from '../apis/provider-container-connection-info';
+import type { ProviderContainerConnectionIdentifierInfo } from './provider-container-connection-identifier-info';
 
 export interface QuadletInfo {
   id: string;
@@ -12,5 +12,5 @@ export interface QuadletInfo {
   // raw content of the service file
   content: string;
   // the connection linked
-  connection: ProviderContainerConnectionInfo;
+  connection: ProviderContainerConnectionIdentifierInfo;
 }

@@ -2,12 +2,12 @@
  * @author axel7083
  */
 
-import type { QuadletApi } from '/@shared/src/apis/quadlet-api';
+import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import type { QuadletInfo } from '/@shared/src/models/quadlet-info';
-import type { QuadletService } from './quadlet-service';
-import type { ProviderContainerConnectionInfo } from '/@shared/src/apis/provider-container-connection-info';
-import type { SystemdService } from './systemd-service';
-import type { PodmanService } from './podman-service';
+import type { QuadletService } from '../services/quadlet-service';
+import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
+import type { SystemdService } from '../services/systemd-service';
+import type { PodmanService } from '../services/podman-service';
 
 interface Dependencies {
   quadlet: QuadletService;
@@ -15,18 +15,20 @@ interface Dependencies {
   podman: PodmanService;
 }
 
-export class QuadletApiImpl implements QuadletApi {
-  constructor(protected dependencies: Dependencies) {}
+export class QuadletApiImpl extends QuadletApi {
+  constructor(protected dependencies: Dependencies) {
+    super();
+  }
 
-  async all(): Promise<QuadletInfo[]> {
+  override async all(): Promise<QuadletInfo[]> {
     return this.dependencies.quadlet.all();
   }
 
-  async refresh(): Promise<void> {
+  override async refresh(): Promise<void> {
     return this.dependencies.quadlet.collectPodmanQuadlet();
   }
 
-  async start(connection: ProviderContainerConnectionInfo, id: string): Promise<boolean> {
+  override async start(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean> {
     const providerConnection = this.dependencies.podman.getProviderContainerConnection(connection);
     try {
       return await this.dependencies.systemd.start({
@@ -39,7 +41,7 @@ export class QuadletApiImpl implements QuadletApi {
     }
   }
 
-  async stop(connection: ProviderContainerConnectionInfo, id: string): Promise<boolean> {
+  override async stop(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean> {
     const providerConnection = this.dependencies.podman.getProviderContainerConnection(connection);
     try {
       return await this.dependencies.systemd.stop({
