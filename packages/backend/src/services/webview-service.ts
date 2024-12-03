@@ -26,7 +26,7 @@ export class WebviewService implements Disposable, AsyncInit {
 
   async init(): Promise<void> {
     // register webview
-    const panel = this.dependencies.window.createWebviewPanel('quadlet', 'Podman Quadlet', this.getWebviewOptions());
+    const panel = this.dependencies.window.createWebviewPanel('quadlet', 'Quadlets', this.getWebviewOptions());
 
     // update html
     const indexHtmlUri = Uri.joinPath(this.#mediaPath, 'index.html');

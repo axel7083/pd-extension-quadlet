@@ -1,6 +1,5 @@
 <script lang="ts">
-
-import MonacoEditor from '/@/lib/monaco-editor/MonacoEditor.svelte';
+// import MonacoEditor from '/@/lib/monaco-editor/MonacoEditor.svelte';
 import type { QuadletInfo } from '/@shared/src/models/quadlet-info';
 import { quadletsInfo } from '/@store/quadlets';
 import { DetailsPage } from '@podman-desktop/ui-svelte';
@@ -36,7 +35,8 @@ export function close(): void {
       </div>
     </svelte:fragment>
     <svelte:fragment slot="content">
-      <MonacoEditor readOnly content={quadlet.content} language="ini" />
+      <!-- monaco editor is multiplying the build time by too much -->
+      <!-- <MonacoEditor readOnly content={quadlet.content} language="ini" /> -->
     </svelte:fragment>
   </DetailsPage>
 {/if}

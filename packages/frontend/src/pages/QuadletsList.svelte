@@ -17,6 +17,11 @@ import QuadletActions from '../lib/table/QuadletActions.svelte';
 import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons/faArrowsRotate';
 import { quadletsInfo } from '/@store/quadlets';
 import { router } from 'tinro';
+import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
+import { providerConnectionsInfo } from '/@store/connections';
+import type {
+  ProviderContainerConnectionDetailedInfo
+} from '/@shared/src/models/provider-container-connection-detailed-info';
 
 const columns = [
   new TableColumn<QuadletInfo>('Status', { width: '70px', renderer: QuadletStatus, align: 'center' }),
@@ -34,8 +39,6 @@ const columns = [
 ];
 const row = new TableRow<QuadletInfo>({ selectable: (_service): boolean => true });
 
-let data: (QuadletInfo & { selected?: boolean })[] = $derived($quadletsInfo);
-
 let loading: boolean = $state(false);
 async function refreshQuadlets(): Promise<void> {
   loading = true;
@@ -46,16 +49,36 @@ async function refreshQuadlets(): Promise<void> {
   }
 }
 
+// undefined mean all
+let containerProviderConnection: ProviderContainerConnectionDetailedInfo | undefined = $state(undefined);
+let searchTerm: string = $state('');
+
+let data: (QuadletInfo & { selected?: boolean })[] = $derived.by(() => {
+  return $quadletsInfo.reduce((output, current) => {
+    let match = true;
+    if(containerProviderConnection) {
+      match = current.connection.providerId === containerProviderConnection.providerId && current.connection.name === containerProviderConnection.name;
+    }
+
+    if(match && searchTerm.length > 0) {
+      match = current.id.includes(searchTerm);
+    }
+
+    if(match) {
+      output.push(current);
+    }
+
+    return output;
+  }, [] as QuadletInfo[]);
+});
+
 function navigateToCreate(): void {
   router.goto('/quadlets/create');
 }
 </script>
 
-<NavPage title="Podman Quadlets" searchEnabled={false}>
+<NavPage title="Podman Quadlets" searchEnabled={true} bind:searchTerm={searchTerm}>
   <svelte:fragment slot="additional-actions">
-    <!-- {#if $quadletsInfoLastUpdate}
-      <TableDurationColumn object={new Date($quadletsInfoLastUpdate)}/>
-    {/if} -->
     <Button
       icon={faPlusCircle}
       disabled={loading}
@@ -67,6 +90,13 @@ function navigateToCreate(): void {
       disabled={loading}
       title="Refresh Quadlets"
       on:click={refreshQuadlets}>Refresh</Button>
+  </svelte:fragment>
+  <svelte:fragment slot="bottom-additional-actions">
+    <div class="w-full flex justify-end">
+      <div class="w-[250px]">
+        <ContainerProviderConnectionSelect bind:value={containerProviderConnection} containerProviderConnections={$providerConnectionsInfo}/>
+      </div>
+    </div>
   </svelte:fragment>
   <svelte:fragment slot="content">
     {#if data?.length > 0}

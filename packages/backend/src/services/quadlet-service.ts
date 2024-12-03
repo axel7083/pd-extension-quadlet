@@ -38,9 +38,7 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
     }, [] as QuadletInfo[]);
   }
 
-  async init(): Promise<void> {
-    this.collectPodmanQuadlet().catch(console.error);
-  }
+  async init(): Promise<void> {}
 
   /**
    * The quadlet executable is installed at /usr/libexec/podman/quadlet on the podman machine
