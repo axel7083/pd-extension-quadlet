@@ -20,4 +20,5 @@ export enum Messages {
   TEST_PURPOSE = 'test-purpose',
   UPDATE_QUADLETS = 'update-quadlets',
   UPDATE_PROVIDERS = 'update-providers',
+  ROUTE_UPDATE = 'route-update',
 }

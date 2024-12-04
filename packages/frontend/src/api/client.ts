@@ -1,6 +1,7 @@
 import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import { RpcBrowser } from '/@shared/src/messages/MessageProxy';
 import { ProviderApi } from '/@shared/src/apis/provide-api';
+import { RoutingApi } from '/@shared/src/apis/routing-api';
 
 /**
  * This file is the client side of the API. It is used to communicate with the backend, which allows
@@ -14,6 +15,7 @@ const podmanDesktopApi = acquirePodmanDesktopApi();
 export const rpcBrowser: RpcBrowser = new RpcBrowser(window, podmanDesktopApi);
 export const quadletAPI: QuadletApi = rpcBrowser.getProxy(QuadletApi);
 export const providerAPI: ProviderApi = rpcBrowser.getProxy(ProviderApi);
+export const routingAPI: RoutingApi = rpcBrowser.getProxy(RoutingApi);
 
 // The below code is used to save the state of the router in the podmanDesktopApi, so
 // that we can determine the correct route to display when the extension is reloaded.
@@ -25,11 +27,18 @@ const isRouterState = (value: unknown): value is RouterState => {
   return typeof value === 'object' && !!value && 'url' in value;
 };
 
-export const getRouterState = (): RouterState => {
+export async function getRouterState(): Promise<RouterState> {
+  const route: string | undefined = await routingAPI.readRoute();
+  if (route) {
+    return {
+      url: route,
+    };
+  }
+
   const state = podmanDesktopApi.getState();
   if (isRouterState(state)) return state;
   return { url: '/' };
-};
+}
 
 /**
  * Making clients available as global properties
@@ -40,4 +49,8 @@ Object.defineProperty(window, 'quadletAPI', {
 
 Object.defineProperty(window, 'providerAPI', {
   value: providerAPI,
+});
+
+Object.defineProperty(window, 'routingAPI', {
+  value: routingAPI,
 });

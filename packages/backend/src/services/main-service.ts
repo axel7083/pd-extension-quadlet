@@ -7,6 +7,7 @@ import type {
   ExtensionContext,
   extensions,
   process as processApi,
+  commands as commandsApi,
   provider,
   window,
   cli as cliApi,
@@ -24,6 +25,10 @@ import { ProviderApi } from '/@shared/src/apis/provide-api';
 import { ProviderService } from './provider-service';
 import { PodletCliService } from './podlet-cli-service';
 import { Octokit } from '@octokit/rest';
+import { CommandService } from './command-service';
+import { RoutingService } from './routing-service';
+import { RoutingApiImpl } from '../apis/routing-api-impl';
+import { RoutingApi } from '/@shared/src/apis/routing-api';
 
 interface Dependencies {
   extensionContext: ExtensionContext;
@@ -33,6 +38,7 @@ interface Dependencies {
   processApi: typeof processApi;
   providers: typeof provider;
   cliApi: typeof cliApi;
+  commandsApi: typeof commandsApi;
 }
 
 export class MainService implements Disposable, AsyncInit {
@@ -61,6 +67,14 @@ export class MainService implements Disposable, AsyncInit {
     rpcExtension.init();
     this.#disposables.push(rpcExtension);
 
+    // routing service
+    const routing = new RoutingService({
+      panel: webview.getPanel(),
+    });
+    await routing.init();
+    this.#disposables.push(routing);
+
+    // Responsible for managing the Podlet cli tool
     const podletCli = new PodletCliService({
       cliApi: this.dependencies.cliApi,
       env: this.dependencies.env,
@@ -108,6 +122,14 @@ export class MainService implements Disposable, AsyncInit {
     await quadletService.init();
     this.#disposables.push(quadletService);
 
+    // Register/execute commands
+    const command = new CommandService({
+      commandsApi: this.dependencies.commandsApi,
+      routing: routing,
+    });
+    await command.init();
+    this.#disposables.push(command);
+
     /**
      * Creating the api for the frontend IPCs
      */
@@ -127,5 +149,11 @@ export class MainService implements Disposable, AsyncInit {
       providers: providers,
     });
     rpcExtension.registerInstance<ProviderApi>(ProviderApi, providerApiImpl);
+
+    // routing api
+    const routingApi = new RoutingApiImpl({
+      routing: routing,
+    });
+    rpcExtension.registerInstance<RoutingApi>(RoutingApi, routingApi);
   }
 }

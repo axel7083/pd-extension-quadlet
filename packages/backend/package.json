@@ -21,6 +21,35 @@
     "lint:fix": "eslint . --fix --ext js,ts,tsx",
     "watch": "vite --mode development build -w"
   },
+  "contributes": {
+    "icons": {
+      "quadlet-icon": {
+        "description": "Quadlet icon",
+        "default": {
+          "fontPath": "quadlet-icon.woff2",
+          "fontCharacter": "\\EA02"
+        }
+      }
+    },
+    "views": {
+      "icons/containersList": [
+        {
+          "when": "PODMAN_SYSTEMD_UNIT in containerLabelKeys",
+          "icon": "${quadlet-icon}"
+        }
+      ]
+    },
+    "menus": {
+      "dashboard/container": [{
+        "command": "podlet.generate.container",
+        "title": "Generate Quadlet"
+      }]
+    },
+    "commands": [{
+      "command": "podlet.generate.container",
+      "title": "Podlet: generate"
+    }]
+  },
   "devDependencies": {
     "@podman-desktop/api": "^1.14.1",
     "@podman-desktop/podman-extension-api": "next",
