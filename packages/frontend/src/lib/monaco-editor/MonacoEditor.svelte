@@ -18,7 +18,7 @@ let editorContainer: HTMLElement;
 
 onMount(async () => {
   console.log('trying to import');
-  import("monaco-editor/esm/vs/editor/editor.api").then((monaco) => {
+  import('monaco-editor/esm/vs/editor/editor.api').then(monaco => {
     editor = monaco.editor.create(editorContainer, {
       value: content,
       language: language,
@@ -33,4 +33,4 @@ onDestroy(() => {
 });
 </script>
 
-<div class="h-full w-screen" bind:this={editorContainer} ></div>
+<div class="h-full w-screen" bind:this={editorContainer}></div>

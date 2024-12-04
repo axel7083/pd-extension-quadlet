@@ -25,7 +25,7 @@ onMount(async () => {
   unsubscribers.push(
     rpcBrowser.subscribe(Messages.ROUTE_UPDATE, location => {
       router.goto(location);
-    }).unsubscribe
+    }).unsubscribe,
   );
 });
 
@@ -44,12 +44,15 @@ onDestroy(() => {
 
       <!-- create quadlet -->
       <Route path="/quadlets/create" firstmatch let:meta>
-        <QuadletCreate/>
+        <QuadletCreate
+          providerId={meta.query.providerId}
+          connection={meta.query.connection}
+          containerId={meta.query.containerId} />
       </Route>
 
       <!-- quadlets details -->
       <Route path="/quadlets/:providerId/:connection/:id/*" firstmatch let:meta>
-        <QuadletDetails providerId={meta.params.providerId} connection={meta.params.connection} id={meta.params.id}/>
+        <QuadletDetails providerId={meta.params.providerId} connection={meta.params.connection} id={meta.params.id} />
       </Route>
     </div>
   </main>

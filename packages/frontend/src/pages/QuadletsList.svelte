@@ -19,9 +19,7 @@ import { quadletsInfo } from '/@store/quadlets';
 import { router } from 'tinro';
 import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
 import { providerConnectionsInfo } from '/@store/connections';
-import type {
-  ProviderContainerConnectionDetailedInfo
-} from '/@shared/src/models/provider-container-connection-detailed-info';
+import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
 
 const columns = [
   new TableColumn<QuadletInfo>('Status', { width: '70px', renderer: QuadletStatus, align: 'center' }),
@@ -56,15 +54,17 @@ let searchTerm: string = $state('');
 let data: (QuadletInfo & { selected?: boolean })[] = $derived.by(() => {
   return $quadletsInfo.reduce((output, current) => {
     let match = true;
-    if(containerProviderConnection) {
-      match = current.connection.providerId === containerProviderConnection.providerId && current.connection.name === containerProviderConnection.name;
+    if (containerProviderConnection) {
+      match =
+        current.connection.providerId === containerProviderConnection.providerId &&
+        current.connection.name === containerProviderConnection.name;
     }
 
-    if(match && searchTerm.length > 0) {
+    if (match && searchTerm.length > 0) {
       match = current.id.includes(searchTerm);
     }
 
-    if(match) {
+    if (match) {
       output.push(current);
     }
 
@@ -79,11 +79,8 @@ function navigateToCreate(): void {
 
 <NavPage title="Podman Quadlets" searchEnabled={true} bind:searchTerm={searchTerm}>
   <svelte:fragment slot="additional-actions">
-    <Button
-      icon={faPlusCircle}
-      disabled={loading}
-      title="Create Quadlet"
-      on:click={navigateToCreate}>Create Quadlet</Button>
+    <Button icon={faPlusCircle} disabled={loading} title="Create Quadlet" on:click={navigateToCreate}
+      >Create Quadlet</Button>
     <Button
       icon={faArrowsRotate}
       inProgress={loading}
@@ -94,7 +91,9 @@ function navigateToCreate(): void {
   <svelte:fragment slot="bottom-additional-actions">
     <div class="w-full flex justify-end">
       <div class="w-[250px]">
-        <ContainerProviderConnectionSelect bind:value={containerProviderConnection} containerProviderConnections={$providerConnectionsInfo}/>
+        <ContainerProviderConnectionSelect
+          bind:value={containerProviderConnection}
+          containerProviderConnections={$providerConnectionsInfo} />
       </div>
     </div>
   </svelte:fragment>

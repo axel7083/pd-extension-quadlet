@@ -27,17 +27,23 @@ export class ProviderService
     this.#disposables.forEach((disposable: Disposable) => disposable.dispose());
   }
 
-  protected getContainerConnections(): ProviderContainerConnection[] {
+  getContainerConnections(): ProviderContainerConnection[] {
     return this.dependencies.providers.getContainerConnections();
   }
 
   public all(): ProviderContainerConnectionDetailedInfo[] {
-    return this.getContainerConnections().map((connectionInfo: ProviderContainerConnection) => ({
+    return this.getContainerConnections().map(this.toProviderContainerConnectionDetailedInfo);
+  }
+
+  public toProviderContainerConnectionDetailedInfo(
+    connectionInfo: ProviderContainerConnection,
+  ): ProviderContainerConnectionDetailedInfo {
+    return {
       providerId: connectionInfo.providerId,
       name: connectionInfo.connection.name,
       status: connectionInfo.connection.status(),
       vmType: connectionInfo.connection.vmType,
-    }));
+    };
   }
 
   public getProviderContainerConnection({

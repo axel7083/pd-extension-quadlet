@@ -2,6 +2,8 @@ import { QuadletApi } from '/@shared/src/apis/quadlet-api';
 import { RpcBrowser } from '/@shared/src/messages/MessageProxy';
 import { ProviderApi } from '/@shared/src/apis/provide-api';
 import { RoutingApi } from '/@shared/src/apis/routing-api';
+import { ContainerApi } from '/@shared/src/apis/container-api';
+import { PodletApi } from '/@shared/src/apis/podlet-api';
 
 /**
  * This file is the client side of the API. It is used to communicate with the backend, which allows
@@ -16,6 +18,8 @@ export const rpcBrowser: RpcBrowser = new RpcBrowser(window, podmanDesktopApi);
 export const quadletAPI: QuadletApi = rpcBrowser.getProxy(QuadletApi);
 export const providerAPI: ProviderApi = rpcBrowser.getProxy(ProviderApi);
 export const routingAPI: RoutingApi = rpcBrowser.getProxy(RoutingApi);
+export const containerAPI: ContainerApi = rpcBrowser.getProxy(ContainerApi);
+export const podletAPI: PodletApi = rpcBrowser.getProxy(PodletApi);
 
 // The below code is used to save the state of the router in the podmanDesktopApi, so
 // that we can determine the correct route to display when the extension is reloaded.
@@ -53,4 +57,12 @@ Object.defineProperty(window, 'providerAPI', {
 
 Object.defineProperty(window, 'routingAPI', {
   value: routingAPI,
+});
+
+Object.defineProperty(window, 'containerAPI', {
+  value: containerAPI,
+});
+
+Object.defineProperty(window, 'podletAPI', {
+  value: podletAPI,
 });

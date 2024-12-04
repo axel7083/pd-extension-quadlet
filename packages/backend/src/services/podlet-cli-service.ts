@@ -4,7 +4,7 @@
 import type { CliTool, Disposable, Logger, RunResult } from '@podman-desktop/api';
 import type extensionApi from '@podman-desktop/api';
 import { PODLET_MARKDOWN, PODLET_ORGANISATION, PODLET_REPOSITORY } from '../utils/constants';
-import type { PodletCliDependencies} from './podlet-cli-helper';
+import type { PodletCliDependencies } from './podlet-cli-helper';
 import { PodletCliHelper } from './podlet-cli-helper';
 import fs, { existsSync, promises } from 'node:fs';
 import type { AsyncInit } from '../utils/async-init';
@@ -35,7 +35,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
    * @param args
    */
   exec(args: string[]): Promise<RunResult> {
-    if(!this.#executable) throw new Error('podlet is not installed.');
+    if (!this.#executable) throw new Error('podlet is not installed.');
     return this.dependencies.processApi.exec(this.#executable, args);
   }
 
@@ -68,7 +68,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
         return selected.label;
       },
       doInstall: async (logger: Logger): Promise<void> => {
-        if(!selected) throw new Error('no asset selected');
+        if (!selected) throw new Error('no asset selected');
         const executable = await this.download(logger, selected);
         return this.updateCliTool(executable);
       },
@@ -155,7 +155,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
     let path: string | undefined = await this.wherePodlet();
 
     // if not installed system-wide, let's check extension folder
-    if(!path) {
+    if (!path) {
       const extensionPath = this.getPodletExtensionPath();
       if (fs.existsSync(extensionPath)) {
         path = extensionPath;
@@ -200,7 +200,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
   // Get the asset id of a given release number for a given operating system and architecture
   // operatingSystem: win32, darwin, linux (see os.platform())
   // arch: x64, arm64 (see os.arch())
-  protected async getReleaseAssetId(releaseId: number): Promise<{ name: string, id: number }> {
+  protected async getReleaseAssetId(releaseId: number): Promise<{ name: string; id: number }> {
     let assetName: string;
     if (this.dependencies.env.isWindows) {
       assetName = this.getWindowsAssetName(os.arch());
@@ -250,7 +250,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
     }
 
     const assetTarget = path.join(storageTmp, assetName);
-    const podletExtensionPath =  this.getPodletExtensionPath();
+    const podletExtensionPath = this.getPodletExtensionPath();
 
     // Download the asset (archive)
     logger.log(`Starting download to ${assetTarget}`);
@@ -285,24 +285,28 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
     tmp: string;
   }): Promise<void> {
     let podletExecutable: string;
-    if(options.assetName.endsWith('.zip')) {
+    if (options.assetName.endsWith('.zip')) {
       await unZip({
         source: options.archive,
         destination: options.tmp,
       });
       podletExecutable = path.join(options.tmp, 'podlet.exe');
-    } else if(options.assetName.endsWith('.tar.xz')) {
+    } else if (options.assetName.endsWith('.tar.xz')) {
       await unTarXZ({
         source: options.archive,
         destination: options.tmp,
       });
-      podletExecutable = path.join(options.tmp, options.assetName.substring(0, options.assetName.indexOf('.tar.xz')), 'podlet.exe');
+      podletExecutable = path.join(
+        options.tmp,
+        options.assetName.substring(0, options.assetName.indexOf('.tar.xz')),
+        'podlet.exe',
+      );
     } else {
       throw new Error(`unrecognized asset format expected asset in .zip or .tar.xz but got file ${options.assetName}`);
     }
 
     // throw if the executable file do not exists
-    if(!existsSync(podletExecutable)) {
+    if (!existsSync(podletExecutable)) {
       throw new Error(`podlet executable not found after extraction: expected ${podletExecutable} to exists`);
     }
 

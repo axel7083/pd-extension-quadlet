@@ -12,10 +12,7 @@ import { XzReadableStream } from 'xz-decompress';
  *
  * @param options
  */
-export async function unZip(options: {
-  source: string,
-  destination: string,
-}): Promise<void> {
+export async function unZip(options: { source: string; destination: string }): Promise<void> {
   const directory = await Open.file(options.source);
   await directory.extract({ path: options.destination });
 }
@@ -38,10 +35,7 @@ function nodeToWebReadable(nodeStream: Readable): ReadableStream<Uint8Array> {
  * This is a nightmare.
  * @param options
  */
-export async function unTarXZ(options: {
-  source: string,
-  destination: string,
-}): Promise<void> {
+export async function unTarXZ(options: { source: string; destination: string }): Promise<void> {
   const readStream = fs.createReadStream(options.source);
   const webReadableStream = nodeToWebReadable(readStream);
   const xzStream = new XzReadableStream(webReadableStream);

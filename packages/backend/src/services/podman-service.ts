@@ -21,6 +21,34 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
   }
 
   /**
+   * Feel very hacky
+   * @param connection
+   * @param path
+   */
+  async readTextFile(connection: ProviderContainerConnection, path: string): Promise<string> {
+    const result = await this.internalExecute({
+      connection: connection,
+      args: [],
+      command: `cat "${path}"`,
+    });
+    return result.stdout;
+  }
+
+  /**
+   * Feel very hacky
+   * @param connection
+   * @param path
+   * @param content
+   */
+  async writeTextFile(connection: ProviderContainerConnection, path: string, content: string): Promise<void> {
+    await this.internalExecute({
+      connection: connection,
+      args: [],
+      command: `echo "${content}" > ${path}`,
+    });
+  }
+
+  /**
    * This method execute a given command in the podman machine
    * @remarks if the podman connection is native, the command will be executed on the host.
    * @dangerous

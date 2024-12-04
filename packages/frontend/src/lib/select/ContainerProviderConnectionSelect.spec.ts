@@ -21,9 +21,7 @@ import { beforeEach, expect, test, vi } from 'vitest';
 import { fireEvent, render, within } from '@testing-library/svelte';
 import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
 import { VMType } from '/@shared/src/utils/vm-types';
-import type {
-  ProviderContainerConnectionDetailedInfo
-} from '/@shared/src/models/provider-container-connection-detailed-info';
+import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
 
 beforeEach(() => {
   vi.resetAllMocks();

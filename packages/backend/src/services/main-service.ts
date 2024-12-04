@@ -11,6 +11,7 @@ import type {
   provider,
   window,
   cli as cliApi,
+  containerEngine,
 } from '@podman-desktop/api';
 import { WebviewService } from './webview-service';
 import { RpcExtension } from '/@shared/src/messages/MessageProxy';
@@ -29,6 +30,11 @@ import { CommandService } from './command-service';
 import { RoutingService } from './routing-service';
 import { RoutingApiImpl } from '../apis/routing-api-impl';
 import { RoutingApi } from '/@shared/src/apis/routing-api';
+import { ContainerService } from './container-service';
+import { ContainerApiImpl } from '../apis/container-api-impl';
+import { ContainerApi } from '/@shared/src/apis/container-api';
+import { PodletApiImpl } from '../apis/podlet-api-impl';
+import { PodletApi } from '/@shared/src/apis/podlet-api';
 
 interface Dependencies {
   extensionContext: ExtensionContext;
@@ -39,6 +45,7 @@ interface Dependencies {
   providers: typeof provider;
   cliApi: typeof cliApi;
   commandsApi: typeof commandsApi;
+  containers: typeof containerEngine;
 }
 
 export class MainService implements Disposable, AsyncInit {
@@ -122,10 +129,20 @@ export class MainService implements Disposable, AsyncInit {
     await quadletService.init();
     this.#disposables.push(quadletService);
 
+    // Basic manipulate of containers
+    const containers = new ContainerService({
+      containers: this.dependencies.containers,
+      providers: providers,
+    });
+    await containers.init();
+    this.#disposables.push(containers);
+
     // Register/execute commands
     const command = new CommandService({
       commandsApi: this.dependencies.commandsApi,
       routing: routing,
+      providers: providers,
+      containers: containers,
     });
     await command.init();
     this.#disposables.push(command);
@@ -150,10 +167,22 @@ export class MainService implements Disposable, AsyncInit {
     });
     rpcExtension.registerInstance<ProviderApi>(ProviderApi, providerApiImpl);
 
+    // container api
+    const containerApiImpl = new ContainerApiImpl({
+      containers: containers,
+    });
+    rpcExtension.registerInstance<ContainerApi>(ContainerApi, containerApiImpl);
+
+    // podlet api
+    const podletApiImpl = new PodletApiImpl({
+      podlet: podletCli,
+    });
+    rpcExtension.registerInstance<PodletApi>(PodletApi, podletApiImpl);
+
     // routing api
-    const routingApi = new RoutingApiImpl({
+    const routingApiImpl = new RoutingApiImpl({
       routing: routing,
     });
-    rpcExtension.registerInstance<RoutingApi>(RoutingApi, routingApi);
+    rpcExtension.registerInstance<RoutingApi>(RoutingApi, routingApiImpl);
   }
 }

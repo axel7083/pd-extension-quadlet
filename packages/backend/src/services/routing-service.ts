@@ -5,6 +5,7 @@ import type { AsyncInit } from '../utils/async-init';
 import type { Disposable, WebviewPanel } from '@podman-desktop/api';
 import { Publisher } from '../utils/publisher';
 import { Messages } from '/@shared/src/messages';
+import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
 
 interface Dependencies {
   panel: WebviewPanel;
@@ -38,8 +39,10 @@ export class RoutingService extends Publisher<string | undefined> implements Dis
     this.dependencies.panel.reveal();
   }
 
-  async openQuadletCreate(): Promise<void> {
-    return this.write('/quadlets/create');
+  async openQuadletCreate(provider: ProviderContainerConnectionIdentifierInfo, containerId: string): Promise<void> {
+    return this.write(
+      `/quadlets/create?providerId=${provider.providerId}&connection=${provider.name}&containerId=${containerId}`,
+    );
   }
 
   dispose(): void {

@@ -1,30 +1,31 @@
 <script lang="ts">
 import Select from '/@/lib/select/Select.svelte';
-
-export let disabled: boolean = false;
 import { VMType } from '/@shared/src/utils/vm-types';
-import type {
-  ProviderContainerConnectionDetailedInfo
-} from '/@shared/src/models/provider-container-connection-detailed-info';
+import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
 
-/**
- * Current value selected
- */
-export let value: ProviderContainerConnectionDetailedInfo | undefined = undefined;
-export let containerProviderConnections: ProviderContainerConnectionDetailedInfo[] = [];
+interface Props {
+  value: ProviderContainerConnectionDetailedInfo | undefined;
+  onChange?: (value: ProviderContainerConnectionDetailedInfo | undefined) => void;
+  containerProviderConnections: ProviderContainerConnectionDetailedInfo[];
+  disabled?: boolean;
+}
+
+let { value = $bindable(), containerProviderConnections, onChange, disabled }: Props = $props();
+
 /**
  * Handy mechanism to provide the mandatory property `label` and `value` to the Select component
  */
-let selected: (ProviderContainerConnectionDetailedInfo & { label: string; value: string }) | undefined = undefined;
-$: {
-  // let's select a default model
-  if (value) {
-    selected = { ...value, label: value.name, value: value.name };
-  }
-}
+let selected: (ProviderContainerConnectionDetailedInfo & { label: string; value: string }) | undefined = $derived.by(
+  () => {
+    if (value) {
+      return { ...value, label: value.name, value: value.name };
+    }
+  },
+);
 
 function handleOnChange(nValue: ProviderContainerConnectionDetailedInfo | undefined): void {
   value = nValue;
+  onChange?.(value);
 }
 </script>
 

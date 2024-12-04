@@ -1,14 +1,8 @@
 /**
  * @author axel7083
  */
-import type {
-  env,
-  window,
-  process as processApi,
-  cli as cliApi, CliTool,
-} from '@podman-desktop/api';
+import type { env, window, process as processApi, cli as cliApi, CliTool } from '@podman-desktop/api';
 import { expect, test, vi, beforeEach } from 'vitest';
-import type { PodletGithubReleaseArtifactMetadata } from './podlet-cli-service';
 import { PodletCliService } from './podlet-cli-service';
 import type { Octokit } from '@octokit/rest';
 import type { PodletCliDependencies } from './podlet-cli-helper';
@@ -47,15 +41,11 @@ class PodletCliServiceTest extends PodletCliService {
     return super.getLinuxAssetName(arch);
   }
 
-  public override async download(release: PodletGithubReleaseArtifactMetadata): Promise<string> {
-    return super.download(release);
-  }
-
   public override async extractPodletExecutable(options: {
     archive: string;
     assetName: string;
     destination: string;
-    tmp: string
+    tmp: string;
   }): Promise<void> {
     return super.extractPodletExecutable(options);
   }
@@ -84,10 +74,12 @@ test('init should create cli tool', async () => {
   const podlet = getPodletCliService();
   await podlet.init();
 
-  expect(cliMock.createCliTool).toHaveBeenCalledWith(expect.objectContaining({
-    name: 'podlet',
-    displayName: 'Podlet',
-  }));
+  expect(cliMock.createCliTool).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: 'podlet',
+      displayName: 'Podlet',
+    }),
+  );
 });
 
 test('dispose should dispose cli tool', async () => {
