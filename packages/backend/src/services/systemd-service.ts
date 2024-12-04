@@ -84,6 +84,26 @@ export class SystemdService extends SystemdHelper implements Disposable, AsyncIn
 
   dispose(): void {}
 
+  /**
+   * This method will run `systemctl daemon-reload`
+   * @param options
+   */
+  public async daemonReload(options: {
+    provider: ProviderContainerConnection,
+    /**
+     * @default false (Run as systemd user)
+     */
+    admin: boolean;
+  }): Promise<boolean> {
+    const args: string[] = [];
+    if (!options.admin) {
+      args.push('--user');
+    }
+    args.push('daemon-reload');
+    const result = await this.podman.systemctlExec(options.provider, args);
+    return result.stderr.length === 0;
+  }
+
   async start(options: {
     provider: ProviderContainerConnection;
     service: string;

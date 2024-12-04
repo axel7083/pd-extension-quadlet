@@ -55,4 +55,32 @@ export class QuadletApiImpl extends QuadletApi {
       this.dependencies.quadlet.refreshQuadletsStatuses().catch(console.error);
     }
   }
+
+  override async remove(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<void> {
+    const providerConnection = this.dependencies.providers.getProviderContainerConnection(connection);
+
+    try {
+      return await this.dependencies.quadlet.remove({
+        provider: providerConnection,
+        id: id,
+        admin: false,
+      });
+    } finally {
+      this.dependencies.quadlet.refreshQuadletsStatuses().catch(console.error);
+    }
+  }
+
+
+  override saveIntoMachine(options: {
+    connection: ProviderContainerConnectionIdentifierInfo;
+    quadlet: string;
+    name: string;
+  }): Promise<void> {
+    const providerConnection = this.dependencies.providers.getProviderContainerConnection(options.connection);
+
+    return this.dependencies.quadlet.saveIntoMachine({
+     ...options,
+      provider: providerConnection,
+    });
+  }
 }

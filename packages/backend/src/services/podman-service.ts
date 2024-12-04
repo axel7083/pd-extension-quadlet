@@ -49,6 +49,20 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
   }
 
   /**
+   * remove a given file in the podman machine
+   * @dangerous
+   * @param connection
+   * @param path
+   */
+  async rmFile(connection: ProviderContainerConnection, path: string): Promise<void> {
+    await this.internalExecute({
+      connection: connection,
+      args: [],
+      command: `rm ${path}`,
+    });
+  }
+
+  /**
    * This method execute a given command in the podman machine
    * @remarks if the podman connection is native, the command will be executed on the host.
    * @dangerous

@@ -8,7 +8,7 @@ import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/model
 import { providerConnectionsInfo } from '/@store/connections';
 import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-info';
 import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
-import { containerAPI, podletAPI } from '/@/api/client';
+import { containerAPI, podletAPI, quadletAPI } from '/@/api/client';
 import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import { Button } from '@podman-desktop/ui-svelte';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons/faFloppyDisk';
@@ -108,6 +108,24 @@ $effect(() => {
       loading = false;
     });
 });
+
+async function saveIntoMachine(): Promise<void> {
+  if(!selectedContainerProviderConnection) throw new Error('no container provider connection selected');
+  if(!quadlet) throw new Error('generation invalid');
+
+  loading = true;
+  try {
+   await quadletAPI.saveIntoMachine({
+     connection: $state.snapshot(selectedContainerProviderConnection),
+     name: 'dummy.container',
+     quadlet: quadlet,
+   });
+  } catch (err: unknown) {
+    console.error(err);
+  } finally {
+    loading = false;
+  }
+}
 </script>
 
 <FormPage
@@ -161,8 +179,12 @@ $effect(() => {
         <footer>
           <div class="w-full flex flex-row gap-x-2 justify-end">
             <Button disabled={loading || !generated} icon={faFloppyDisk} title="Save">Save</Button>
-            <Button disabled={loading || !generated} icon={faTruckRampBox} title="Load into podman machine"
-              >Load into podman machine</Button>
+            <Button
+              disabled={loading || !generated}
+              icon={faTruckRampBox}
+              title="Save into podman machine"
+              on:click={saveIntoMachine}
+              >Save into podman machine</Button>
           </div>
         </footer>
       </div>

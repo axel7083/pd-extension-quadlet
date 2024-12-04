@@ -9,8 +9,10 @@ import { QuadletDryRunParser } from '../utils/parsers/quadlet-dryrun-parser';
 import type { Quadlet } from '../models/quadlet';
 import type { QuadletInfo } from '/@shared/src/models/quadlet-info';
 import type { AsyncInit } from '../utils/async-init';
+import { join as joinposix } from 'node:path/posix';
 
 export class QuadletService extends QuadletHelper implements Disposable, AsyncInit {
+  // todo: find a better alternative, ProviderContainerConnection is not consistent
   #value: Map<ProviderContainerConnection, Quadlet[]>;
   #extensionsEventDisposable: Disposable | undefined;
 
@@ -39,6 +41,20 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
   }
 
   async init(): Promise<void> {}
+
+  public findQuadlet(options: {
+    provider: ProviderContainerConnection,
+    id: string,
+  }): Quadlet | undefined {
+    for (const [provider, quadlets] of this.#value.entries()) {
+
+      if(provider.providerId !== options.provider.providerId ||
+      provider.connection.name !== options.provider.connection.name) continue;
+
+      return quadlets.find(quadlet => quadlet.id === options.id);
+    }
+    return undefined;
+  }
 
   /**
    * The quadlet executable is installed at /usr/libexec/podman/quadlet on the podman machine
@@ -148,6 +164,64 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
       this.#value.set(provider, quadlets);
     }
     this.notify();
+  }
+
+  async saveIntoMachine(options: {
+    quadlet: string,
+    name: string; // name of the quadlet file E.g. `example.container`
+    provider: ProviderContainerConnection,
+    /**
+     * @default false (Run as systemd user)
+     */
+    admin?: boolean;
+  }): Promise<void> {
+    // 1. write the file into the podman machine
+    let destination: string;
+    if(options.admin) {
+      destination = joinposix('/etc/containers/systemd/', options.name);
+    } else {
+      destination = joinposix('~/.config/containers/systemd/', options.name);
+    }
+
+    try {
+      console.debug(`[QuadletService] writing quadlet file to ${destination}`);
+      await this.dependencies.podman.writeTextFile(options.provider, destination, options.quadlet);
+    } catch (err: unknown) {
+      console.error(`Something went wrong while trying to write file to ${destination}`, err);
+      throw err;
+    }
+
+    // 2. reload
+    await this.dependencies.systemd.daemonReload({
+      admin: options.admin ?? false,
+      provider: options.provider,
+    });
+  }
+
+  async remove(options: {
+           id: string;
+           provider: ProviderContainerConnection,
+    /**
+     * @default false (Run as systemd user)
+     */
+    admin?: boolean;
+         }): Promise<void> {
+    const quadlet = this.findQuadlet({
+      provider: options.provider,
+      id: options.id,
+    });
+    if(!quadlet) throw new Error(`quadlet with id ${options.id} not found`);
+
+    // 1. remove the quadlet file
+    console.debug(`[QuadletService] Deleting quadlet ${options.id} with path ${quadlet.path}`);
+    await this.dependencies.podman.rmFile(options.provider, quadlet.path);
+
+    // 2. reload systemctl
+    console.debug(`[QuadletService] Reloading systemctl`);
+    await this.dependencies.systemd.daemonReload({
+      admin: options.admin ?? false,
+      provider: options.provider,
+    });
   }
 
   dispose(): void {
