@@ -1,18 +1,22 @@
 /**
  * @author axel7083
  */
-import unzipper from 'unzipper';
+import { Open } from 'unzipper';
 import fs from 'node:fs';
 import * as tarFs from 'tar-fs';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'stream/promises';
 import { XzReadableStream } from 'xz-decompress';
 
+/**
+ *
+ * @param options
+ */
 export async function unZip(options: {
   source: string,
   destination: string,
 }): Promise<void> {
-  const directory = await unzipper.Open.file(options.source);
+  const directory = await Open.file(options.source);
   await directory.extract({ path: options.destination });
 }
 
@@ -32,15 +36,17 @@ function nodeToWebReadable(nodeStream: Readable): ReadableStream<Uint8Array> {
 
 /**
  * This is a nightmare.
- * @param tarFilePath
- * @param destFolder
+ * @param options
  */
-export async function unTarXZ(tarFilePath: string, destFolder: string): Promise<void> {
-  const readStream = fs.createReadStream(tarFilePath);
+export async function unTarXZ(options: {
+  source: string,
+  destination: string,
+}): Promise<void> {
+  const readStream = fs.createReadStream(options.source);
   const webReadableStream = nodeToWebReadable(readStream);
   const xzStream = new XzReadableStream(webReadableStream);
 
-  const extract = tarFs.extract(destFolder);
+  const extract = tarFs.extract(options.destination);
 
   return pipeline(xzStream as unknown as Readable, extract);
 }

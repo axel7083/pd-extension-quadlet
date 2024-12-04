@@ -1,3 +1,6 @@
+/**
+ * @author axel7083
+ */
 import { test, expect } from 'vitest';
 import { parse } from 'ini';
 

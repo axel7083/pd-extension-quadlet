@@ -52,7 +52,7 @@ export abstract class PodletCliHelper {
 
   /**
    */
-  protected async wherePodlet(): Promise<string> {
+  protected async wherePodlet(): Promise<string | undefined> {
     const executable = this.getPodletExecutableName();
     // grab full path for Linux and mac
     if (this.dependencies.env.isLinux || this.dependencies.env.isMac) {
@@ -73,6 +73,6 @@ export abstract class PodletCliHelper {
       }
     }
 
-    throw new Error(`binary ${executable} not found.`);
+    return undefined;
   }
 }
