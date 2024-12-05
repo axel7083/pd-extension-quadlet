@@ -201,6 +201,9 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
         admin: options.admin ?? false,
         provider: options.provider,
       });
+
+      //4. collect quadlets
+      await this.collectPodmanQuadlet();
     });
   }
 

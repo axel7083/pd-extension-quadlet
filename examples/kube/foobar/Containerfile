@@ -1,0 +1,4 @@
+FROM docker.io/library/nginx:alpine
+
+EXPOSE 80
+LABEL "quadlet"="demo-kube"

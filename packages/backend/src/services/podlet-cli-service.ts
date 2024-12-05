@@ -286,6 +286,11 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
       archive: assetTarget,
     });
 
+    // cleanup tmp directory
+    await promises.rm(storageTmp, {
+      recursive: true,
+    });
+
     // make the asset executable
     logger.log('Fixing execution permission');
     await this.makeExecutable(podletExtensionPath);

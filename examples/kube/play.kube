@@ -1,0 +1,4 @@
+# play.kube
+[Kube]
+PodmanArgs=--build
+Yaml=play.yaml

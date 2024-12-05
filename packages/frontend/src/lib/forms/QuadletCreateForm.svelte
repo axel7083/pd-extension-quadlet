@@ -10,6 +10,8 @@ import { Button } from '@podman-desktop/ui-svelte';
 import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
 import { providerConnectionsInfo } from '/@store/connections';
 import type { QuadletCreateFormProps } from '/@/pages/QuadletCreate.svelte';
+import RadioButtons from '/@/lib/buttons/RadioButtons.svelte';
+import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
 interface Props extends QuadletCreateFormProps {
   loading: boolean;
@@ -22,6 +24,7 @@ let containers: SimpleContainerInfo[] = $state([]);
 let quadlet: string | undefined = $state(undefined);
 let generated: boolean = $derived((quadlet ?? '').length > 0);
 let error: string | undefined = $state(undefined);
+let quadletType: QuadletType = $state(QuadletType.CONTAINER);
 
 // using the query parameters
 let selectedContainerProviderConnection: ProviderContainerConnectionDetailedInfo | undefined = $derived(
@@ -69,6 +72,10 @@ function onContainerChange(value: SimpleContainerInfo | undefined): void {
   }
 }
 
+function onQuadletTypeChange(value: string): void {
+  quadletType = value as QuadletType;
+}
+
 // if we mount the component, and query parameters with all the values defined
 // we need to fetch manually the containers
 $effect(() => {
@@ -111,6 +118,7 @@ async function saveIntoMachine(): Promise<void> {
       name: 'dummy.container',
       quadlet: quadlet,
     });
+    router.goto('/');
   } catch (err: unknown) {
     error = String(err);
     console.error(err);
@@ -131,6 +139,13 @@ async function saveIntoMachine(): Promise<void> {
       value={selectedContainerProviderConnection}
       containerProviderConnections={$providerConnectionsInfo} />
 
+    <!-- <label for="container-engine" class="pt-4 block mb-2 font-bold text-[var(--pd-content-card-header-text)]"
+    >Quadlet type</label>
+    <RadioButtons onChange={onQuadletTypeChange} value={quadletType} options={Object.values(QuadletType).map((key) => ({
+    id: key,
+    label: key
+    }))}/> -->
+
     <!-- container list -->
     <label for="container" class="pt-4 block mb-2 font-bold text-[var(--pd-content-card-header-text)]">Container</label>
     <ContainersSelect
@@ -147,7 +162,7 @@ async function saveIntoMachine(): Promise<void> {
 
   <footer>
     <div class="w-full flex flex-row gap-x-2 justify-end">
-      <Button disabled={loading || !generated} icon={faFloppyDisk} title="Save">Save</Button>
+      <!-- TODO: <Button disabled={loading || !generated} icon={faFloppyDisk} title="Save">Save</Button> -->
       <Button
         disabled={loading || !generated}
         icon={faTruckRampBox}

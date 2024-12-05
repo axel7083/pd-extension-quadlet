@@ -38,7 +38,12 @@ function handleOnClear(): void {
   --list-background={'var(--pd-dropdown-bg)'}
   --item-hover-bg="var(--pd-dropdown-item-hover-bg)"
   --border="1px solid var(--pd-input-field-stroke)"
-  --border-hover="1px solid var(--pd-input-field-hover-stroke)"
+  --disabled-border-color="var(--pd-button-disabled)"
+  --border-hover={!disabled?"1px solid var(--pd-input-field-hover-stroke)":"1px solid var(--pd-button-disabled)"}
+  --placeholderOpacity="1"
+  --disabled-placeholder-color="var(--pd-button-disabled)"
+  --disabled-placeholder-opacity="0.5"
+  --placeholderColor="var(--pd-dropdown-item-text)"
   --list-border="1px solid var(--pd-input-field-stroke)"
   --border-focused="1px solid var(--pd-input-field-hover-stroke)"
   --selected-item-padding="0 0 0 0"
@@ -49,7 +54,7 @@ function handleOnClear(): void {
   placeholder={placeholder}
   class="!bg-[var(--pd-content-bg)] !text-[var(--pd-content-card-text)]"
   items={items}
-  showChevron>
+  showChevron={!disabled}>
   <div slot="item" let:item>
     <slot name="item" item={item}>
       <div>{item.label}</div>

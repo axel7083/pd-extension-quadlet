@@ -43,7 +43,7 @@ onDestroy(() => {
       </Route>
 
       <!-- create quadlet -->
-      <Route path="/quadlets/create" firstmatch let:meta>
+      <Route path="/quadlets/create/*" firstmatch let:meta>
         <QuadletCreate
           providerId={meta.query.providerId}
           connection={meta.query.connection}
