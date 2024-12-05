@@ -1,8 +1,9 @@
 /**
  * @author axel7083
  */
-import type { CliTool, Disposable, Logger, RunResult } from '@podman-desktop/api';
 import type extensionApi from '@podman-desktop/api';
+import type { CliTool, Disposable, Logger, RunResult } from '@podman-desktop/api';
+import { ProgressLocation } from '@podman-desktop/api';
 import { PODLET_MARKDOWN, PODLET_ORGANISATION, PODLET_REPOSITORY } from '../utils/constants';
 import type { PodletCliDependencies } from './podlet-cli-helper';
 import { PodletCliHelper } from './podlet-cli-helper';
@@ -80,7 +81,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
 
   // Provides last 5 majors releases from GitHub using the GitHub API
   // return name, tag and id of the release
-  async getLastestsReleasesMetadata(): Promise<PodletGithubReleaseArtifactMetadata[]> {
+  protected async getLastestsReleasesMetadata(): Promise<PodletGithubReleaseArtifactMetadata[]> {
     // Grab last 5 majors releases from GitHub using the GitHub API
     const lastReleases = await this.dependencies.octokit.repos.listReleases({
       owner: PODLET_ORGANISATION,
@@ -231,6 +232,26 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
     };
   }
 
+  /**
+   * Handy method to quickly install the latest version of podlet
+   */
+  public async installLasted(): Promise<void> {
+    return this.dependencies.window.withProgress(
+      {
+        title: 'Installing Podlet',
+        location: ProgressLocation.TASK_WIDGET,
+      },
+      async () => {
+        console.debug('Installing latest podlet');
+        const artifact: PodletGithubReleaseArtifactMetadata = await this.getLatestVersionAsset();
+        console.debug(`Found version ${artifact.tag}`);
+        const executable = await this.download(console, artifact);
+        console.debug(`Executable downloaded at ${executable}`);
+        return this.updateCliTool(executable);
+      },
+    );
+  }
+
   // Download minikube from the artifact metadata: MinikubeGithubReleaseArtifactMetadata
   // this will download it to the storage bin folder as well as make it executable
   // return the path where the file has been downloaded
@@ -285,12 +306,14 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
     tmp: string;
   }): Promise<void> {
     let podletExecutable: string;
+    const executableName: string = this.getPodletExecutableName();
+
     if (options.assetName.endsWith('.zip')) {
       await unZip({
         source: options.archive,
         destination: options.tmp,
       });
-      podletExecutable = path.join(options.tmp, 'podlet.exe');
+      podletExecutable = path.join(options.tmp, executableName);
     } else if (options.assetName.endsWith('.tar.xz')) {
       await unTarXZ({
         source: options.archive,
@@ -299,7 +322,7 @@ export class PodletCliService extends PodletCliHelper implements Disposable, Asy
       podletExecutable = path.join(
         options.tmp,
         options.assetName.substring(0, options.assetName.indexOf('.tar.xz')),
-        'podlet.exe',
+        executableName,
       );
     } else {
       throw new Error(`unrecognized asset format expected asset in .zip or .tar.xz but got file ${options.assetName}`);

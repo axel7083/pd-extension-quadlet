@@ -70,7 +70,6 @@ export class QuadletApiImpl extends QuadletApi {
     }
   }
 
-
   override saveIntoMachine(options: {
     connection: ProviderContainerConnectionIdentifierInfo;
     quadlet: string;
@@ -79,7 +78,7 @@ export class QuadletApiImpl extends QuadletApi {
     const providerConnection = this.dependencies.providers.getProviderContainerConnection(options.connection);
 
     return this.dependencies.quadlet.saveIntoMachine({
-     ...options,
+      ...options,
       provider: providerConnection,
     });
   }

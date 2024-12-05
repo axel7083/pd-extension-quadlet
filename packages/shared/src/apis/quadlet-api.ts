@@ -14,8 +14,8 @@ export abstract class QuadletApi {
   abstract remove(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<void>;
 
   abstract saveIntoMachine(options: {
-    connection: ProviderContainerConnectionIdentifierInfo,
-    quadlet: string, // content
+    connection: ProviderContainerConnectionIdentifierInfo;
+    quadlet: string; // content
     name: string; // filename
   }): Promise<void>;
 }

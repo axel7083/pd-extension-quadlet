@@ -7,4 +7,7 @@ export abstract class PodletApi {
   static readonly CHANNEL: string = 'podlet-api';
 
   abstract generateContainer(container: SimpleContainerInfo): Promise<string>;
+
+  abstract install(): Promise<void>;
+  abstract isInstalled(): Promise<boolean>;
 }

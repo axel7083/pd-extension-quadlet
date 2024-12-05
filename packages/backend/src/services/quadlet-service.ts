@@ -42,14 +42,13 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
 
   async init(): Promise<void> {}
 
-  public findQuadlet(options: {
-    provider: ProviderContainerConnection,
-    id: string,
-  }): Quadlet | undefined {
+  public findQuadlet(options: { provider: ProviderContainerConnection; id: string }): Quadlet | undefined {
     for (const [provider, quadlets] of this.#value.entries()) {
-
-      if(provider.providerId !== options.provider.providerId ||
-      provider.connection.name !== options.provider.connection.name) continue;
+      if (
+        provider.providerId !== options.provider.providerId ||
+        provider.connection.name !== options.provider.connection.name
+      )
+        continue;
 
       return quadlets.find(quadlet => quadlet.id === options.id);
     }
@@ -167,9 +166,9 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
   }
 
   async saveIntoMachine(options: {
-    quadlet: string,
+    quadlet: string;
     name: string; // name of the quadlet file E.g. `example.container`
-    provider: ProviderContainerConnection,
+    provider: ProviderContainerConnection;
     /**
      * @default false (Run as systemd user)
      */
@@ -177,7 +176,7 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
   }): Promise<void> {
     // 1. write the file into the podman machine
     let destination: string;
-    if(options.admin) {
+    if (options.admin) {
       destination = joinposix('/etc/containers/systemd/', options.name);
     } else {
       destination = joinposix('~/.config/containers/systemd/', options.name);
@@ -199,18 +198,18 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
   }
 
   async remove(options: {
-           id: string;
-           provider: ProviderContainerConnection,
+    id: string;
+    provider: ProviderContainerConnection;
     /**
      * @default false (Run as systemd user)
      */
     admin?: boolean;
-         }): Promise<void> {
+  }): Promise<void> {
     const quadlet = this.findQuadlet({
       provider: options.provider,
       id: options.id,
     });
-    if(!quadlet) throw new Error(`quadlet with id ${options.id} not found`);
+    if (!quadlet) throw new Error(`quadlet with id ${options.id} not found`);
 
     // 1. remove the quadlet file
     console.debug(`[QuadletService] Deleting quadlet ${options.id} with path ${quadlet.path}`);

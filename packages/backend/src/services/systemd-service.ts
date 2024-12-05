@@ -89,7 +89,7 @@ export class SystemdService extends SystemdHelper implements Disposable, AsyncIn
    * @param options
    */
   public async daemonReload(options: {
-    provider: ProviderContainerConnection,
+    provider: ProviderContainerConnection;
     /**
      * @default false (Run as systemd user)
      */

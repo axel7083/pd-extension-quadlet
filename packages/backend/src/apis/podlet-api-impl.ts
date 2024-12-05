@@ -18,4 +18,12 @@ export class PodletApiImpl extends PodletApi {
     const result = await this.dependencies.podlet.exec(['generate', 'container', container.id]);
     return result.stdout;
   }
+
+  override async isInstalled(): Promise<boolean> {
+    return this.dependencies.podlet.isInstalled();
+  }
+
+  override install(): Promise<void> {
+    return this.dependencies.podlet.installLasted();
+  }
 }
