@@ -2,6 +2,7 @@
  * @author axel7083
  */
 
+import { ProgressLocation } from '@podman-desktop/api';
 import type { Disposable, ProviderContainerConnection } from '@podman-desktop/api';
 import type { QuadletServiceDependencies } from './quadlet-helper';
 import { QuadletHelper } from './quadlet-helper';
@@ -174,26 +175,32 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
      */
     admin?: boolean;
   }): Promise<void> {
-    // 1. write the file into the podman machine
-    let destination: string;
-    if (options.admin) {
-      destination = joinposix('/etc/containers/systemd/', options.name);
-    } else {
-      destination = joinposix('~/.config/containers/systemd/', options.name);
-    }
+    return this.dependencies.window.withProgress({
+      title: `Saving ${options.name} quadlet`,
+      location: ProgressLocation.TASK_WIDGET,
+    }, async () => {
+      // 1. write the file into the podman machine
+      let destination: string;
+      if (options.admin) {
+        destination = joinposix('/etc/containers/systemd/', options.name);
+      } else {
+        destination = joinposix('~/.config/containers/systemd/', options.name);
+      }
 
-    try {
-      console.debug(`[QuadletService] writing quadlet file to ${destination}`);
-      await this.dependencies.podman.writeTextFile(options.provider, destination, options.quadlet);
-    } catch (err: unknown) {
-      console.error(`Something went wrong while trying to write file to ${destination}`, err);
-      throw err;
-    }
+      // 2. write the file
+      try {
+        console.debug(`[QuadletService] writing quadlet file to ${destination}`);
+        await this.dependencies.podman.writeTextFile(options.provider, destination, options.quadlet);
+      } catch (err: unknown) {
+        console.error(`Something went wrong while trying to write file to ${destination}`, err);
+        throw err;
+      }
 
-    // 2. reload
-    await this.dependencies.systemd.daemonReload({
-      admin: options.admin ?? false,
-      provider: options.provider,
+      // 3. reload
+      await this.dependencies.systemd.daemonReload({
+        admin: options.admin ?? false,
+        provider: options.provider,
+      });
     });
   }
 
@@ -224,6 +231,27 @@ export class QuadletService extends QuadletHelper implements Disposable, AsyncIn
 
     // 3. update the list of quadlets
     return this.collectPodmanQuadlet();
+  }
+
+  /**
+   * read the source of the given quadlet
+   * @param options
+   */
+  async read(options: {
+    id: string;
+    provider: ProviderContainerConnection;
+    /**
+     * @default false (Run as systemd user)
+     */
+    admin?: boolean;
+  }): Promise<string> {
+    const quadlet = this.findQuadlet({
+      provider: options.provider,
+      id: options.id,
+    });
+    if (!quadlet) throw new Error(`quadlet with id ${options.id} not found`);
+
+    return await this.dependencies.podman.readTextFile(options.provider, quadlet.path);
   }
 
   dispose(): void {

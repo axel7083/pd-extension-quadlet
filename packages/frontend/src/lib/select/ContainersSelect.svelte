@@ -25,8 +25,16 @@ function handleOnChange(nValue: SimpleContainerInfo | undefined): void {
   value = nValue;
   onChange?.(value);
 }
-</script>
 
+function getContainerStatusColor(item: SimpleContainerInfo): string {
+  switch (item.state) {
+    case 'running':
+      return 'bg-[var(--pd-status-running)]';
+    default:
+      return 'bg-[var(--pd-status-stopped)]';
+  }
+}
+</script>
 <Select
   label="Select Container"
   name="select-container"
@@ -41,6 +49,7 @@ function handleOnChange(nValue: SimpleContainerInfo | undefined): void {
   }))}>
   <div slot="item" let:item>
     <div class="flex items-center">
+      <div class="flex w-2 h-2 me-2 rounded-full {getContainerStatusColor(item)}"></div>
       <div class="grow">
         <span>{item.name.substring(1)}</span>
       </div>

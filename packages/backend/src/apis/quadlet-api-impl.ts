@@ -70,6 +70,16 @@ export class QuadletApiImpl extends QuadletApi {
     }
   }
 
+  override async read(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<string> {
+    const providerConnection = this.dependencies.providers.getProviderContainerConnection(connection);
+
+    return await this.dependencies.quadlet.read({
+      provider: providerConnection,
+      id: id,
+      admin: false,
+    });
+  }
+
   override saveIntoMachine(options: {
     connection: ProviderContainerConnectionIdentifierInfo;
     quadlet: string;

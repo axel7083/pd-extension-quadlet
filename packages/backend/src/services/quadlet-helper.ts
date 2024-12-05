@@ -1,7 +1,7 @@
 /**
  * @author axel7083
  */
-import type { env, provider as Provider, Webview } from '@podman-desktop/api';
+import type { env, provider as Provider, Webview, window } from '@podman-desktop/api';
 import { Publisher } from '../utils/publisher';
 import type { QuadletInfo } from '/@shared/src/models/quadlet-info';
 import { Messages } from '/@shared/src/messages';
@@ -14,6 +14,7 @@ export interface QuadletServiceDependencies {
   webview: Webview;
   podman: PodmanService;
   systemd: SystemdService;
+  window: typeof window;
 }
 
 export abstract class QuadletHelper extends Publisher<QuadletInfo[]> {

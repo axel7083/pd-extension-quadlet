@@ -47,7 +47,7 @@ function handleOnChange(nValue: ProviderContainerConnectionDetailedInfo | undefi
         <span>{item.name}</span>
       </div>
 
-      {#if item.vmType !== VMType.UNKNOWN}
+      {#if item.vmType && item.vmType !== VMType.UNKNOWN}
         <div>({item.vmType})</div>
       {/if}
     </div>

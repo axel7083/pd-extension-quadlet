@@ -5,6 +5,9 @@ import type { Disposable, ProviderContainerConnection, RunError, RunResult } fro
 import type { PodmanDependencies } from './podman-helper';
 import { PodmanHelper } from './podman-helper';
 import type { AsyncInit } from '../utils/async-init';
+import { dirname } from 'node:path/posix';
+import { writeFile, mkdir, readFile, rm } from 'node:fs/promises';
+import { homedir } from 'node:os';
 
 export class PodmanService extends PodmanHelper implements Disposable, AsyncInit {
   #extensionsEventDisposable: Disposable | undefined;
@@ -26,6 +29,12 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
    * @param path
    */
   async readTextFile(connection: ProviderContainerConnection, path: string): Promise<string> {
+    // linux native special case
+    if(this.isLinux && connection.connection.vmType === undefined) {
+      console.debug('[PodmanService] native connection using node:fs');
+      return readFile(path, { encoding: 'utf8' });
+    }
+
     const result = await this.internalExecute({
       connection: connection,
       args: [],
@@ -37,14 +46,34 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
   /**
    * Feel very hacky
    * @param connection
-   * @param path
+   * @param destination
    * @param content
    */
-  async writeTextFile(connection: ProviderContainerConnection, path: string, content: string): Promise<void> {
+  async writeTextFile(connection: ProviderContainerConnection, destination: string, content: string): Promise<void> {
+    // linux native special case
+    if(this.isLinux && connection.connection.vmType === undefined) {
+      console.debug('[PodmanService] native connection using node:fs');
+      // 1. resolve homedir
+      const resolved = destination.replace('~', homedir());
+      // 2. mkdir parent directory
+      await mkdir(dirname(resolved), { recursive: true });
+      // 3. write file
+      await writeFile(resolved, content, { encoding: 'utf8' });
+      return;
+    }
+
+    // mkdir
     await this.internalExecute({
       connection: connection,
-      args: [],
-      command: `echo "${content}" > ${path}`,
+      args: ['-p', dirname(destination)],
+      command: `mkdir`,
+    });
+
+    // write
+    await this.internalExecute({
+      connection: connection,
+      args: [`"${content}"`, '>', destination],
+      command: `echo`,
     });
   }
 
@@ -55,10 +84,16 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
    * @param path
    */
   async rmFile(connection: ProviderContainerConnection, path: string): Promise<void> {
+    // linux native special case
+    if(this.isLinux && connection.connection.vmType === undefined) {
+      console.debug('[PodmanService] native connection using node:fs');
+      return rm(path, { recursive: false, force: false });
+    }
+
     await this.internalExecute({
       connection: connection,
-      args: [],
-      command: `rm ${path}`,
+      args: [path],
+      command: `rm`,
     });
   }
 
@@ -77,7 +112,8 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
 
     // let's check for podman native (only supported on linux)
     if (this.isLinux && connection.connection.vmType === undefined) {
-      console.warn('provider do not have a VMType, considering native podman linux.');
+      console.warn('[PodmanService] provider do not have a VMType, considering native podman linux.');
+      console.debug(`[PodmanService] command ${command} args ${args}`);
       return this.exec(command, args);
     }
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { FormPage, ErrorMessage, EmptyScreen, Button } from '@podman-desktop/ui-svelte';
+import { FormPage, EmptyScreen } from '@podman-desktop/ui-svelte';
 import { faDownload, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import QuadletCreateForm from '/@/lib/forms/QuadletCreateForm.svelte';
 import Fa from 'svelte-fa';
@@ -8,6 +8,7 @@ import { podletAPI } from '/@/api/client';
 import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 import PodletInstall from '/@/lib/buttons/PodletInstall.svelte';
+import { router } from 'tinro';
 
 export interface QuadletCreateFormProps {
   providerId?: string;
@@ -23,6 +24,10 @@ let podletInstalled: boolean | undefined = $state(undefined);
 
 async function checkPodletInstallation(): Promise<void> {
   podletInstalled = await podletAPI.isInstalled();
+}
+
+function close(): void {
+  router.goto('/');
 }
 
 onMount(async () => {

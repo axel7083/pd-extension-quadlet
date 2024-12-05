@@ -3,7 +3,7 @@ import type { ProviderContainerConnectionIdentifierInfo } from './provider-conta
 export interface SimpleContainerInfo {
   id: string;
   connection: ProviderContainerConnectionIdentifierInfo;
-  status: string;
+  state: 'running' | 'exited' | 'created' | string;
   name: string;
   image: string;
 }

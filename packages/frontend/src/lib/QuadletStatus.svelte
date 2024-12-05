@@ -20,7 +20,7 @@ let status: string = $derived.by(() => {
 });
 
 function openDetails(quadlet: QuadletInfo): void {
-  return router.goto(`/quadlets/${quadlet.connection.providerId}/${quadlet.connection.name}/${quadlet.id}/*`);
+  return router.goto(`/quadlets/${quadlet.connection.providerId}/${quadlet.connection.name}/${quadlet.id}`);
 }
 </script>
 

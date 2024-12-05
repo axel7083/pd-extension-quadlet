@@ -12,6 +12,7 @@ export abstract class QuadletApi {
   abstract start(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean>;
   abstract stop(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<boolean>;
   abstract remove(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<void>;
+  abstract read(connection: ProviderContainerConnectionIdentifierInfo, id: string): Promise<string>;
 
   abstract saveIntoMachine(options: {
     connection: ProviderContainerConnectionIdentifierInfo;

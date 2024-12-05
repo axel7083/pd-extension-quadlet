@@ -71,7 +71,7 @@ export class ContainerService implements Disposable, AsyncInit {
     return {
       id: container.Id,
       name: container.Names[0] ?? '<none>',
-      status: container.Status,
+      state: container.State,
       image: container.Image,
       connection,
     };

@@ -6,7 +6,6 @@ import { containerAPI, podletAPI, quadletAPI } from '/@/api/client';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons/faFloppyDisk';
 import { faTruckRampBox } from '@fortawesome/free-solid-svg-icons/faTruckRampBox';
 import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
-import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import { Button } from '@podman-desktop/ui-svelte';
 import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
 import { providerConnectionsInfo } from '/@store/connections';
@@ -22,6 +21,7 @@ let { providerId, connection, containerId, loading = $bindable() }: Props = $pro
 let containers: SimpleContainerInfo[] = $state([]);
 let quadlet: string | undefined = $state(undefined);
 let generated: boolean = $derived((quadlet ?? '').length > 0);
+let error: string | undefined = $state(undefined);
 
 // using the query parameters
 let selectedContainerProviderConnection: ProviderContainerConnectionDetailedInfo | undefined = $derived(
@@ -31,10 +31,6 @@ let selectedContainerProviderConnection: ProviderContainerConnectionDetailedInfo
 let selectedContainer: SimpleContainerInfo | undefined = $derived(
   containers?.find(container => container.id === containerId),
 );
-
-export function close(): void {
-  router.goto('/');
-}
 
 async function listContainers(): Promise<void> {
   if (!selectedContainerProviderConnection) throw new Error('no container provider connection selected');
@@ -116,6 +112,7 @@ async function saveIntoMachine(): Promise<void> {
       quadlet: quadlet,
     });
   } catch (err: unknown) {
+    error = String(err);
     console.error(err);
   } finally {
     loading = false;
@@ -144,7 +141,7 @@ async function saveIntoMachine(): Promise<void> {
   </div>
 
   <!-- todo replace with monaco -->
-  <code class="whitespace-break-spaces text-sm">
+  <code class="whitespace-break-spaces text-sm pt-4">
     {quadlet}
   </code>
 
