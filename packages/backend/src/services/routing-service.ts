@@ -6,6 +6,7 @@ import type { Disposable, WebviewPanel } from '@podman-desktop/api';
 import { Publisher } from '../utils/publisher';
 import { Messages } from '/@shared/src/messages';
 import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
+import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
 interface Dependencies {
   panel: WebviewPanel;
@@ -39,10 +40,17 @@ export class RoutingService extends Publisher<string | undefined> implements Dis
     this.dependencies.panel.reveal();
   }
 
-  async openQuadletCreate(provider: ProviderContainerConnectionIdentifierInfo, containerId: string): Promise<void> {
-    return this.write(
-      `/quadlets/create?providerId=${provider.providerId}&connection=${provider.name}&containerId=${containerId}`,
-    );
+  async openQuadletCreateContainer(
+    provider: ProviderContainerConnectionIdentifierInfo,
+    containerId: string,
+  ): Promise<void> {
+    const search = new URLSearchParams({
+      providerId: provider.providerId,
+      connection: provider.name,
+      resourceId: containerId,
+      quadletType: QuadletType.CONTAINER,
+    });
+    return this.write(`/quadlets/create?${search.toString()}`);
   }
 
   dispose(): void {

@@ -47,7 +47,8 @@ onDestroy(() => {
         <QuadletCreate
           providerId={meta.query.providerId}
           connection={meta.query.connection}
-          containerId={meta.query.containerId} />
+          quadletType={meta.query.quadletType}
+          resourceId={meta.query.resourceId} />
       </Route>
 
       <!-- quadlets details -->

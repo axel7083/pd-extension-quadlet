@@ -11,7 +11,12 @@ interface Props {
   disabled?: boolean;
 }
 
-let { options, value, onChange }: Props = $props();
+let { options, value, onChange, disabled }: Props = $props();
+
+function onclick(id: string): void {
+  if (disabled) return;
+  onChange(id);
+}
 </script>
 
 <ul class="text-sm text-center rounded-lg shadow bg-[var(--pd-action-button-bg)] flex overflow-hidden">
@@ -19,9 +24,12 @@ let { options, value, onChange }: Props = $props();
     {@const selected = value === option.id}
     <li class="w-full">
       <button
-        onclick={onChange.bind(undefined, option.id)}
-        class:bg-[var(--pd-button-primary-bg)]={selected}
-        class="inline-block py-2 w-full bg-gray-100" aria-current="page">
+        onclick={onclick.bind(undefined, option.id)}
+        class:bg-[var(--pd-button-primary-bg)]={selected && !disabled}
+        class:bg-[var(--pd-button-disabled)]={disabled}
+        class:cursor-not-allowed={disabled}
+        class="inline-block py-2 w-full bg-gray-100"
+        aria-current="page">
         {option.label}
       </button>
     </li>

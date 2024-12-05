@@ -1,7 +1,6 @@
 <script lang="ts">
 import { FormPage, EmptyScreen } from '@podman-desktop/ui-svelte';
-import { faDownload, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import QuadletCreateForm from '/@/lib/forms/QuadletCreateForm.svelte';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Fa from 'svelte-fa';
 import { onMount } from 'svelte';
 import { podletAPI } from '/@/api/client';
@@ -9,11 +8,13 @@ import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 import PodletInstall from '/@/lib/buttons/PodletInstall.svelte';
 import { router } from 'tinro';
+import QuadletForm from '/@/lib/forms/quadlet/QuadletForm.svelte';
 
 export interface QuadletCreateFormProps {
   providerId?: string;
   connection?: string;
-  containerId?: string;
+  resourceId?: string;
+  quadletType?: string;
 }
 
 // We get the query parameters from the parent
@@ -65,7 +66,7 @@ onMount(async () => {
           <PodletInstall bind:loading={loading} onInstallCompleted={checkPodletInstallation} />
         </EmptyScreen>
       {:else if podletInstalled}
-        <QuadletCreateForm {...props} bind:loading={loading} />
+        <QuadletForm {...props} bind:loading={loading} />
       {/if}
     </div>
   </svelte:fragment>

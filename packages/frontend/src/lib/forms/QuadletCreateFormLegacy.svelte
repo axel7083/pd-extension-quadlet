@@ -18,7 +18,7 @@ interface Props extends QuadletCreateFormProps {
 }
 
 // We get the query parameters from the parent
-let { providerId, connection, containerId, loading = $bindable() }: Props = $props();
+let { providerId, connection, resourceId: containerId, loading = $bindable() }: Props = $props();
 
 let containers: SimpleContainerInfo[] = $state([]);
 let quadlet: string | undefined = $state(undefined);

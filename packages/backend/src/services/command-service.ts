@@ -25,19 +25,19 @@ export class CommandService implements Disposable, AsyncInit {
     this.#disposables.push(
       this.dependencies.commandsApi.registerCommand(
         PODLET_GENERATE_CONTAINER_CMD,
-        this.routeToQuadletCreate.bind(this),
+        this.routeToQuadletCreateContainer.bind(this),
       ),
     );
   }
 
-  protected async routeToQuadletCreate(container: ContainerInfoUI): Promise<void> {
+  protected async routeToQuadletCreateContainer(container: ContainerInfoUI): Promise<void> {
     // 1. Get the {@link ProviderContainerConnection} by engine id
     const provider: ProviderContainerConnection =
       await this.dependencies.containers.getProviderContainerConnectionByEngineId(container.engineId);
     // 2. Transform the ProviderContainerConnection in ProviderContainerConnectionDetailedInfo
     const providerIdentifier = this.dependencies.providers.toProviderContainerConnectionDetailedInfo(provider);
     // 3. Open the quadlet create page
-    return this.dependencies.routing.openQuadletCreate(providerIdentifier, container.id);
+    return this.dependencies.routing.openQuadletCreateContainer(providerIdentifier, container.id);
   }
 
   dispose(): void {

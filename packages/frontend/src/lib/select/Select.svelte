@@ -39,7 +39,7 @@ function handleOnClear(): void {
   --item-hover-bg="var(--pd-dropdown-item-hover-bg)"
   --border="1px solid var(--pd-input-field-stroke)"
   --disabled-border-color="var(--pd-button-disabled)"
-  --border-hover={!disabled?"1px solid var(--pd-input-field-hover-stroke)":"1px solid var(--pd-button-disabled)"}
+  --border-hover={!disabled ? '1px solid var(--pd-input-field-hover-stroke)' : '1px solid var(--pd-button-disabled)'}
   --placeholderOpacity="1"
   --disabled-placeholder-color="var(--pd-button-disabled)"
   --disabled-placeholder-opacity="0.5"

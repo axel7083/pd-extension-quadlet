@@ -46,9 +46,7 @@ const podmanExtensionApiMock: Extension<PodmanExtensionApi> = {
   },
 };
 
-const processApiMock: typeof processApi = {
-
-} as unknown as typeof processApi;
+const processApiMock: typeof processApi = {} as unknown as typeof processApi;
 
 const providersMock: ProviderService = {} as ProviderService;
 
@@ -173,13 +171,10 @@ describe('writeTextFile', () => {
 
     // ensure parent directory created
     expect(mkdir).toHaveBeenCalledWith(resolved, { recursive: true });
-    expect(writeFile).toHaveBeenCalledWith(
-      join(resolved, 'dummy.container'),
-      content,
-      { encoding: 'utf8' });
+    expect(writeFile).toHaveBeenCalledWith(join(resolved, 'dummy.container'), content, { encoding: 'utf8' });
   });
 
-  test.each(['windows', 'mac'])('%s', async (platform) => {
+  test.each(['windows', 'mac'])('%s', async platform => {
     const destination = '~/.config/containers/systemd/dummy.container';
     const content = 'dummy-content';
 
@@ -194,21 +189,18 @@ describe('writeTextFile', () => {
     expect(writeFile).not.toHaveBeenCalled();
 
     // mkdir
-    expect(podmanExtensionApiMock.exports.exec).toHaveBeenCalledWith([
-      'machine',
-      'ssh',
-      'mkdir -p ~/.config/containers/systemd',
-    ], {
-      connection: WSL_PROVIDER_CONNECTION_MOCK,
-    });
+    expect(podmanExtensionApiMock.exports.exec).toHaveBeenCalledWith(
+      ['machine', 'ssh', 'mkdir -p ~/.config/containers/systemd'],
+      {
+        connection: WSL_PROVIDER_CONNECTION_MOCK,
+      },
+    );
 
-    expect(podmanExtensionApiMock.exports.exec).toHaveBeenCalledWith([
-      'machine',
-      'ssh',
-      `echo "${content}" > ${destination}`,
-    ], {
-      connection: WSL_PROVIDER_CONNECTION_MOCK,
-    });
+    expect(podmanExtensionApiMock.exports.exec).toHaveBeenCalledWith(
+      ['machine', 'ssh', `echo "${content}" > ${destination}`],
+      {
+        connection: WSL_PROVIDER_CONNECTION_MOCK,
+      },
+    );
   });
-
 });

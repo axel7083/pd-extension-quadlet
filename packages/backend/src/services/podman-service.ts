@@ -30,7 +30,7 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
    */
   async readTextFile(connection: ProviderContainerConnection, path: string): Promise<string> {
     // linux native special case
-    if(this.isLinux && connection.connection.vmType === undefined) {
+    if (this.isLinux && connection.connection.vmType === undefined) {
       console.debug('[PodmanService] native connection using node:fs');
       return readFile(path, { encoding: 'utf8' });
     }
@@ -51,7 +51,7 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
    */
   async writeTextFile(connection: ProviderContainerConnection, destination: string, content: string): Promise<void> {
     // linux native special case
-    if(this.isLinux && connection.connection.vmType === undefined) {
+    if (this.isLinux && connection.connection.vmType === undefined) {
       console.debug('[PodmanService] native connection using node:fs');
       // 1. resolve homedir
       const resolved = destination.replace('~', homedir());
@@ -85,7 +85,7 @@ export class PodmanService extends PodmanHelper implements Disposable, AsyncInit
    */
   async rmFile(connection: ProviderContainerConnection, path: string): Promise<void> {
     // linux native special case
-    if(this.isLinux && connection.connection.vmType === undefined) {
+    if (this.isLinux && connection.connection.vmType === undefined) {
       console.debug('[PodmanService] native connection using node:fs');
       return rm(path, { recursive: false, force: false });
     }

@@ -36,16 +36,19 @@ export function close(): void {
 
 onMount(async () => {
   try {
-    quadletSource = await quadletAPI.read({
-      name: connection,
-      providerId: providerId,
-    },id);
+    quadletSource = await quadletAPI.read(
+      {
+        name: connection,
+        providerId: providerId,
+      },
+      id,
+    );
   } catch (err: unknown) {
     console.error(err);
-  }  finally {
+  } finally {
     loading = false;
   }
-})
+});
 </script>
 
 {#if quadlet}
@@ -61,14 +64,12 @@ onMount(async () => {
       <Tab
         title="Generated"
         url="/quadlets/{providerId}/{connection}/{id}"
-        selected={$router.path === `/quadlets/${providerId}/${connection}/${id}`}
-      />
+        selected={$router.path === `/quadlets/${providerId}/${connection}/${id}`} />
       <!-- source tab -->
       <Tab
         title="Source"
         url="/quadlets/{providerId}/{connection}/{id}/source"
-        selected={$router.path === `/quadlets/${providerId}/${connection}/${id}/source`}
-      />
+        selected={$router.path === `/quadlets/${providerId}/${connection}/${id}/source`} />
     </svelte:fragment>
     <svelte:fragment slot="icon">
       <div class="rounded-full w-8 h-8 flex items-center justify-center">
@@ -77,7 +78,6 @@ onMount(async () => {
     </svelte:fragment>
     <svelte:fragment slot="content">
       <div class="flex flex-col w-full">
-
         <!-- loading indicator -->
         <div class="h-0.5">
           <!-- avoid flickering -->
