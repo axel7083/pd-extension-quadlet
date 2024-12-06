@@ -1,10 +1,10 @@
 {
-  "name": "helloworld",
-  "displayName": "Hello World",
-  "description": "Hello World extension",
+  "name": "quadlet",
+  "displayName": "Pdoman Quadlet",
+  "description": "Manage, generate Podman Quadlet",
   "version": "0.0.1",
   "icon": "icon.png",
-  "publisher": "you",
+  "publisher": "axel7083",
   "type": "module",
   "license": "Apache-2.0",
   "engines": {

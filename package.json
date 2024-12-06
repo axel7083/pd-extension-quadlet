@@ -1,10 +1,10 @@
 {
-  "name": "helloworld",
-  "displayName": "Hello World",
-  "description": "Hello World template for using webview",
-  "version": "1.4.0-next",
+  "name": "quadlet",
+  "displayName": "Pdoman Quadlet",
+  "description": "Manage, generate Podman Quadlet",
+  "version": "0.1.0-next",
   "icon": "icon.png",
-  "publisher": "yourusername",
+  "publisher": "axel7083",
   "private": true,
   "engines": {
     "node": ">=20.9.0",

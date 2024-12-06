@@ -1,6 +1,4 @@
 <script lang="ts">
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-
 import {
   Button,
   Table,
@@ -102,7 +100,7 @@ function navigateToGenerate(): void {
     {#if data?.length > 0}
       <Table kind="service" data={data} columns={columns} row={row} />
     {:else}
-      <EmptyScreen icon={faArrowsRotate} title={'No Quadlet found on the system'} message=""></EmptyScreen>
+      <EmptyScreen icon={faArrowsRotate} title={'No Quadlet found on the system'}/>
     {/if}
   </svelte:fragment>
 </NavPage>
