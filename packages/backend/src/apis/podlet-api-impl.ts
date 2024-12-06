@@ -26,11 +26,7 @@ export class PodletApiImpl extends PodletApi {
     type: QuadletType;
     resourceId: string;
   }): Promise<string> {
-    const result = await this.dependencies.podlet.exec([
-      'generate',
-      options.type,
-      options.resourceId,
-    ]);
+    const result = await this.dependencies.podlet.exec(['generate', options.type, options.resourceId]);
     return result.stdout;
   }
 

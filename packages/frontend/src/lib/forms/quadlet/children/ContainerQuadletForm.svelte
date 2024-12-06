@@ -4,14 +4,13 @@ import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-i
 import { containerAPI, podletAPI } from '/@/api/client';
 import { router } from 'tinro';
 import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
-import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
 let {
   loading = $bindable(),
   resourceId: containerId,
   provider,
-  onGenerate,
   onError,
+  onChange,
 }: QuadletChildrenFormProps = $props();
 
 let containers: SimpleContainerInfo[] | undefined = $state();
@@ -30,9 +29,7 @@ async function listContainers(): Promise<void> {
   try {
     containers = await containerAPI.all($state.snapshot(provider));
   } catch (err: unknown) {
-    onError(
-      new Error(`Something went wrong while listing containers for provider ${provider.providerId}: ${String(err)}`),
-    );
+    onError(`Something went wrong while listing containers for provider ${provider.providerId}: ${String(err)}`);
   } finally {
     loading = false;
   }
@@ -45,30 +42,7 @@ function onContainerChange(value: SimpleContainerInfo | undefined): void {
   }
 
   router.location.query.set(RESOURCE_ID_QUERY, value.id);
-  generate();
-}
-
-function generate(): void {
-  if (!provider || !selectedContainer) return;
-  loading = true;
-
-  podletAPI
-    .generate({
-      connection: $state.snapshot(provider),
-      resourceId: $state.snapshot(selectedContainer.id),
-      type: QuadletType.CONTAINER,
-    })
-    .then(onGenerate)
-    .catch((err: unknown) => {
-      onError(
-        new Error(
-          `Something went wrong while generating container quadlet container for provider ${provider.providerId}: ${String(err)}`,
-        ),
-      );
-    })
-    .finally(() => {
-      loading = false;
-    });
+  onChange();
 }
 
 // if we mount the component, and query parameters with all the values defined

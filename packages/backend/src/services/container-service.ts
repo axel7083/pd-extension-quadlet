@@ -1,11 +1,7 @@
 /**
  * @author axel7083
  */
-import type {
-  Disposable,
-  ContainerInfo,
-  ProviderContainerConnection,
-} from '@podman-desktop/api';
+import type { Disposable, ContainerInfo, ProviderContainerConnection } from '@podman-desktop/api';
 import type { AsyncInit } from '../utils/async-init';
 import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-info';
 import type { ProviderService } from './provider-service';

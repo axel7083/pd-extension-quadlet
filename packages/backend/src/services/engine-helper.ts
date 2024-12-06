@@ -7,8 +7,7 @@ export interface EngineHelperDependencies {
   containers: typeof containerEngine;
 }
 
-export abstract class EngineHelper<T extends  EngineHelperDependencies> {
-
+export abstract class EngineHelper<T extends EngineHelperDependencies> {
   protected constructor(protected dependencies: T) {}
 
   protected async getEngineInfo(connection: ContainerProviderConnection): Promise<ContainerEngineInfo> {

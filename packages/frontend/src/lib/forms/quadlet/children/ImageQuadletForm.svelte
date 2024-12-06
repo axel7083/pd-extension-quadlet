@@ -1,26 +1,16 @@
 <script lang="ts">
 import { type QuadletChildrenFormProps, RESOURCE_ID_QUERY } from '/@/lib/forms/quadlet/quadlet-utils';
 import type { SimpleImageInfo } from '/@shared/src/models/simple-image-info';
-import { imageAPI, podletAPI } from '/@/api/client';
+import { imageAPI } from '/@/api/client';
 import { router } from 'tinro';
 import ImagesSelect from '/@/lib/select/ImagesSelect.svelte';
-import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
-let {
-  loading = $bindable(),
-  resourceId: imageId,
-  provider,
-  onGenerate,
-  onError,
-}: QuadletChildrenFormProps = $props();
+let { loading = $bindable(), resourceId: imageId, provider, onError, onChange }: QuadletChildrenFormProps = $props();
 
 let images: SimpleImageInfo[] | undefined = $state();
 
 // use the query parameter containerId
-let selectedImage: SimpleImageInfo | undefined = $derived(
-  images?.find(image => image.id === imageId),
-);
-
+let selectedImage: SimpleImageInfo | undefined = $derived(images?.find(image => image.id === imageId));
 
 async function listImages(): Promise<void> {
   if (!provider) throw new Error('no container provider connection selected');
@@ -31,9 +21,7 @@ async function listImages(): Promise<void> {
   try {
     images = await imageAPI.all($state.snapshot(provider));
   } catch (err: unknown) {
-    onError(
-      new Error(`Something went wrong while listing images for provider ${provider.providerId}: ${String(err)}`),
-    );
+    onError(`Something went wrong while listing images for provider ${provider.providerId}: ${String(err)}`);
   } finally {
     loading = false;
   }
@@ -46,30 +34,7 @@ function onImageChange(value: SimpleImageInfo | undefined): void {
   }
 
   router.location.query.set(RESOURCE_ID_QUERY, value.id);
-  generate();
-}
-
-function generate(): void {
-  if (!provider || !selectedImage) return;
-  loading = true;
-
-  podletAPI
-    .generate({
-      connection: $state.snapshot(provider),
-      resourceId: $state.snapshot(selectedImage.id),
-      type: QuadletType.IMAGE,
-    })
-    .then(onGenerate)
-    .catch((err: unknown) => {
-      onError(
-        new Error(
-          `Something went wrong while generating container quadlet container for provider ${provider.providerId}: ${String(err)}`,
-        ),
-      );
-    })
-    .finally(() => {
-      loading = false;
-    });
+  onChange();
 }
 
 // if we mount the component, and query parameters with all the values defined
@@ -88,4 +53,3 @@ $effect(() => {
   onChange={onImageChange}
   value={selectedImage}
   images={images ?? []} />
-

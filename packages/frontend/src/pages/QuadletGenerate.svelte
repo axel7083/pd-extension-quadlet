@@ -9,6 +9,7 @@ import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 import PodletInstall from '/@/lib/buttons/PodletInstall.svelte';
 import { router } from 'tinro';
 import QuadletGenerateForm from '/@/lib/forms/quadlet/QuadletGenerateForm.svelte';
+import { faCode } from '@fortawesome/free-solid-svg-icons/faCode';
 
 export interface QuadletGenerateFormProps {
   providerId?: string;
@@ -45,7 +46,7 @@ onMount(async () => {
   onbreadcrumbClick={close}>
   <svelte:fragment slot="icon">
     <div class="rounded-full w-8 h-8 flex items-center justify-center">
-      <Fa size="1.125x" class="text-[var(--pd-content-header-icon)]" icon={faPlusCircle} />
+      <Fa size="1.125x" class="text-[var(--pd-content-header-icon)]" icon={faCode} />
     </div>
   </svelte:fragment>
   <svelte:fragment slot="content">
@@ -66,7 +67,7 @@ onMount(async () => {
           <PodletInstall bind:loading={loading} onInstallCompleted={checkPodletInstallation} />
         </EmptyScreen>
       {:else if podletInstalled}
-        <QuadletGenerateForm {...props} bind:loading={loading} />
+        <QuadletGenerateForm close={close} {...props} bind:loading={loading} />
       {/if}
     </div>
   </svelte:fragment>
