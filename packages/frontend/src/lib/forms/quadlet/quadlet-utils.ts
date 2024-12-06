@@ -21,11 +21,14 @@ export interface QuadletChildrenFormProps {
 
 export const RESOURCE_ID_QUERY = 'resourceId';
 
-export const QUADLET_FORMS: Record<QuadletType, Component<QuadletChildrenFormProps>> = {
+// we cannot generate quadlet type for kube
+export type QUADLET_TYPE_GENERATE = Exclude<QuadletType, QuadletType.KUBE>;
+
+export const QUADLET_GENERATE_FORMS: Record<QUADLET_TYPE_GENERATE, Component<QuadletChildrenFormProps>> = {
   [QuadletType.CONTAINER]: ContainerQuadletForm,
   [QuadletType.POD]: PodQuadletForm,
   [QuadletType.VOLUME]: VolumeQuadletForm,
   [QuadletType.NETWORK]: NetworkQuadletForm,
   [QuadletType.IMAGE]: ImageQuadletForm,
-  [QuadletType.KUBE]: KubeQuadletForm,
 };
+

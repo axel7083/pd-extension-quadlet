@@ -8,9 +8,9 @@ import { onDestroy, onMount } from 'svelte';
 import { getRouterState, rpcBrowser } from './api/client';
 import QuadletDetails from '/@/pages/QuadletDetails.svelte';
 import QuadletsList from '/@/pages/QuadletsList.svelte';
-import QuadletCreate from '/@/pages/QuadletCreate.svelte';
 import { Messages } from '/@shared/src/messages';
 import type { Unsubscriber } from 'svelte/store';
+import QuadletGenerate from '/@/pages/QuadletGenerate.svelte';
 
 router.mode.hash();
 let isMounted = $state(false);
@@ -43,8 +43,8 @@ onDestroy(() => {
       </Route>
 
       <!-- create quadlet -->
-      <Route path="/quadlets/create/*" firstmatch let:meta>
-        <QuadletCreate
+      <Route path="/quadlets/generate/*" firstmatch let:meta>
+        <QuadletGenerate
           providerId={meta.query.providerId}
           connection={meta.query.connection}
           quadletType={meta.query.quadletType}

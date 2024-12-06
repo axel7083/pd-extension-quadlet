@@ -8,9 +8,9 @@ import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import { faWarning } from '@fortawesome/free-solid-svg-icons/faWarning';
 import PodletInstall from '/@/lib/buttons/PodletInstall.svelte';
 import { router } from 'tinro';
-import QuadletForm from '/@/lib/forms/quadlet/QuadletForm.svelte';
+import QuadletGenerateForm from '/@/lib/forms/quadlet/QuadletGenerateForm.svelte';
 
-export interface QuadletCreateFormProps {
+export interface QuadletGenerateFormProps {
   providerId?: string;
   connection?: string;
   resourceId?: string;
@@ -18,7 +18,7 @@ export interface QuadletCreateFormProps {
 }
 
 // We get the query parameters from the parent
-let props: QuadletCreateFormProps = $props();
+let props: QuadletGenerateFormProps = $props();
 
 let loading: boolean = $state(false);
 let podletInstalled: boolean | undefined = $state(undefined);
@@ -37,10 +37,10 @@ onMount(async () => {
 </script>
 
 <FormPage
-  title="Create Quadlet"
+  title="Generate Quadlet"
   onclose={close}
   breadcrumbLeftPart="Quadlets"
-  breadcrumbRightPart="Create"
+  breadcrumbRightPart="Generate"
   breadcrumbTitle="Go back to quadlets page"
   onbreadcrumbClick={close}>
   <svelte:fragment slot="icon">
@@ -66,7 +66,7 @@ onMount(async () => {
           <PodletInstall bind:loading={loading} onInstallCompleted={checkPodletInstallation} />
         </EmptyScreen>
       {:else if podletInstalled}
-        <QuadletForm {...props} bind:loading={loading} />
+        <QuadletGenerateForm {...props} bind:loading={loading} />
       {/if}
     </div>
   </svelte:fragment>

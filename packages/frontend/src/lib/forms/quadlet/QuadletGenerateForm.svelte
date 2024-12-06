@@ -3,17 +3,22 @@ import { faTruckRampBox } from '@fortawesome/free-solid-svg-icons/faTruckRampBox
 import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
 import { Button } from '@podman-desktop/ui-svelte';
 import type { Component } from 'svelte';
-import { QUADLET_FORMS, type QuadletChildrenFormProps, RESOURCE_ID_QUERY } from '/@/lib/forms/quadlet/quadlet-utils';
+import {
+  QUADLET_GENERATE_FORMS,
+  type QUADLET_TYPE_GENERATE,
+  type QuadletChildrenFormProps,
+  RESOURCE_ID_QUERY,
+} from '/@/lib/forms/quadlet/quadlet-utils';
 import { QuadletType } from '/@shared/src/utils/quadlet-type';
-import type { QuadletCreateFormProps } from '/@/pages/QuadletCreate.svelte';
 import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
 import { providerConnectionsInfo } from '/@store/connections';
 import { router } from 'tinro';
 import RadioButtons from '/@/lib/buttons/RadioButtons.svelte';
 import { ErrorMessage } from '@podman-desktop/ui-svelte';
 import { quadletAPI } from '/@/api/client';
+import type { QuadletGenerateFormProps } from '/@/pages/QuadletGenerate.svelte';
 
-interface Props extends QuadletCreateFormProps {
+interface Props extends QuadletGenerateFormProps {
   loading: boolean;
 }
 
@@ -24,7 +29,7 @@ let {
   connection,
   resourceId,
 }: Props = $props();
-let ChildForm: Component<QuadletChildrenFormProps> = $derived(QUADLET_FORMS[quadletType as QuadletType]);
+let ChildForm: Component<QuadletChildrenFormProps> = $derived(QUADLET_GENERATE_FORMS[quadletType as QUADLET_TYPE_GENERATE]);
 
 // using the query parameters
 let selectedContainerProviderConnection: ProviderContainerConnectionDetailedInfo | undefined = $derived(

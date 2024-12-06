@@ -50,7 +50,7 @@ export class RoutingService extends Publisher<string | undefined> implements Dis
       resourceId: containerId,
       quadletType: QuadletType.CONTAINER,
     });
-    return this.write(`/quadlets/create?${search.toString()}`);
+    return this.write(`/quadlets/generate?${search.toString()}`);
   }
 
   dispose(): void {

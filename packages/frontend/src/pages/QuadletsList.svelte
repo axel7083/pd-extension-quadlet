@@ -20,6 +20,7 @@ import { router } from 'tinro';
 import ContainerProviderConnectionSelect from '/@/lib/select/ContainerProviderConnectionSelect.svelte';
 import { providerConnectionsInfo } from '/@store/connections';
 import type { ProviderContainerConnectionDetailedInfo } from '/@shared/src/models/provider-container-connection-detailed-info';
+import { faCode } from '@fortawesome/free-solid-svg-icons/faCode';
 
 const columns = [
   new TableColumn<QuadletInfo>('Status', { width: '70px', renderer: QuadletStatus, align: 'center' }),
@@ -72,15 +73,15 @@ let data: (QuadletInfo & { selected?: boolean })[] = $derived.by(() => {
   }, [] as QuadletInfo[]);
 });
 
-function navigateToCreate(): void {
-  router.goto('/quadlets/create');
+function navigateToGenerate(): void {
+  router.goto('/quadlets/generate');
 }
 </script>
 
 <NavPage title="Podman Quadlets" searchEnabled={true} bind:searchTerm={searchTerm}>
   <svelte:fragment slot="additional-actions">
-    <Button icon={faPlusCircle} disabled={loading} title="Create Quadlet" on:click={navigateToCreate}
-      >Create Quadlet</Button>
+    <Button icon={faCode} disabled={loading} title="Generate Quadlet" on:click={navigateToGenerate}
+      >Generate Quadlet</Button>
     <Button
       icon={faArrowsRotate}
       inProgress={loading}
