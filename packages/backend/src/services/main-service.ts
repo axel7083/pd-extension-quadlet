@@ -35,6 +35,9 @@ import { ContainerApiImpl } from '../apis/container-api-impl';
 import { ContainerApi } from '/@shared/src/apis/container-api';
 import { PodletApiImpl } from '../apis/podlet-api-impl';
 import { PodletApi } from '/@shared/src/apis/podlet-api';
+import { ImageApiImpl } from '../apis/image-api-impl';
+import { ImageService } from './image-service';
+import { ImageApi } from '/@shared/src/apis/image-api';
 
 interface Dependencies {
   extensionContext: ExtensionContext;
@@ -138,6 +141,14 @@ export class MainService implements Disposable, AsyncInit {
     await containers.init();
     this.#disposables.push(containers);
 
+    // Basic manipulation of images
+    const images = new ImageService({
+      containers: this.dependencies.containers,
+      providers: providers,
+    });
+    await images.init();
+    this.#disposables.push(images);
+
     // Register/execute commands
     const command = new CommandService({
       commandsApi: this.dependencies.commandsApi,
@@ -173,6 +184,12 @@ export class MainService implements Disposable, AsyncInit {
       containers: containers,
     });
     rpcExtension.registerInstance<ContainerApi>(ContainerApi, containerApiImpl);
+
+    // image api
+    const imageApiImpl = new ImageApiImpl({
+      images: images,
+    });
+    rpcExtension.registerInstance<ImageApi>(ImageApi, imageApiImpl);
 
     // podlet api
     const podletApiImpl = new PodletApiImpl({

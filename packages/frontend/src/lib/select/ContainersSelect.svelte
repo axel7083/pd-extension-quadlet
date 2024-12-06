@@ -43,10 +43,10 @@ function getContainerStatusColor(item: SimpleContainerInfo): string {
   value={selected}
   onchange={handleOnChange}
   placeholder="Select container to use"
-  items={containers.map(containerProviderConnection => ({
-    ...containerProviderConnection,
-    value: containerProviderConnection.name,
-    label: containerProviderConnection.name,
+  items={containers.map(container => ({
+    ...container,
+    value: container.name,
+    label: container.name,
   }))}>
   <div slot="item" let:item>
     <div class="flex items-center">

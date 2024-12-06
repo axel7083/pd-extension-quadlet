@@ -3,32 +3,25 @@
  */
 import type {
   Disposable,
-  containerEngine,
   ContainerInfo,
-  ContainerEngineInfo,
-  ContainerProviderConnection,
   ProviderContainerConnection,
 } from '@podman-desktop/api';
 import type { AsyncInit } from '../utils/async-init';
 import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-info';
 import type { ProviderService } from './provider-service';
 import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
+import { EngineHelper, type EngineHelperDependencies } from './engine-helper';
 
-interface Dependencies {
-  containers: typeof containerEngine;
+interface Dependencies extends EngineHelperDependencies {
   providers: ProviderService;
 }
 
-export class ContainerService implements Disposable, AsyncInit {
-  constructor(protected dependencies: Dependencies) {}
+export class ContainerService extends EngineHelper<Dependencies> implements Disposable, AsyncInit {
+  constructor(dependencies: Dependencies) {
+    super(dependencies);
+  }
 
   async init(): Promise<void> {}
-
-  protected async getEngineInfo(connection: ContainerProviderConnection): Promise<ContainerEngineInfo> {
-    const infos = await this.dependencies.containers.listInfos({ provider: connection });
-    if (infos.length !== 1) throw new Error(`cannot find matching info for connection ${connection.name}`);
-    return infos[0];
-  }
 
   async all(providerConnection: ProviderContainerConnectionIdentifierInfo): Promise<SimpleContainerInfo[]> {
     const containers = await this.dependencies.containers.listContainers();

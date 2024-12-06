@@ -1,11 +1,12 @@
 <script lang="ts">
-import { type QuadletChildrenFormProps, RESOURCE_ID_QUERY } from '/@/lib/forms/quadlet/quadlet-utils';
-import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-info';
-import { containerAPI, podletAPI } from '/@/api/client';
-import { router } from 'tinro';
-import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
+  import { type QuadletChildrenFormProps, RESOURCE_ID_QUERY } from '/@/lib/forms/quadlet/quadlet-utils';
+  import type { SimpleContainerInfo } from '/@shared/src/models/simple-container-info';
+  import { containerAPI, podletAPI } from '/@/api/client';
+  import { router } from 'tinro';
+  import ContainersSelect from '/@/lib/select/ContainersSelect.svelte';
+  import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
-let {
+  let {
   loading = $bindable(),
   resourceId: containerId,
   provider,
@@ -52,7 +53,11 @@ function generate(): void {
   loading = true;
 
   podletAPI
-    .generateContainer($state.snapshot(selectedContainer))
+    .generate({
+      connection: $state.snapshot(provider),
+      resourceId: $state.snapshot(selectedContainer.id),
+      type: QuadletType.CONTAINER,
+    })
     .then(onGenerate)
     .catch((err: unknown) => {
       onError(

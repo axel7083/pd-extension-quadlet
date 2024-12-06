@@ -1,8 +1,8 @@
 export enum QuadletType {
   CONTAINER = 'container',
+  IMAGE = 'image',
   POD = 'pod',
   VOLUME = 'volume',
   NETWORK = 'network',
-  IMAGE = 'image',
   KUBE = 'kube',
 }
