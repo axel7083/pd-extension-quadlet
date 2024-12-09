@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.glyph-image-name {
+    cursor: pointer;
+    width: 20px;
+    margin-left: 1rem;
+}

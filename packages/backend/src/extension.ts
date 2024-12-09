@@ -11,6 +11,7 @@ import {
   window,
   cli as cliApi,
   commands as commandsApi,
+  navigation as navigationApi,
 } from '@podman-desktop/api';
 import { MainService } from './services/main-service';
 
@@ -28,6 +29,7 @@ export async function activate(extensionContext: ExtensionContext): Promise<void
     cliApi: cliApi,
     commandsApi: commandsApi,
     containers: containerEngine,
+    navigationApi: navigationApi,
   });
   return main.init();
 }

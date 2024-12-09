@@ -31,6 +31,23 @@ export class ImageService extends EngineHelper<Dependencies> implements Disposab
     return images.map(image => this.toSimpleImageInfo(image, providerConnection));
   }
 
+  async searchImage(
+    providerConnection: ProviderContainerConnectionIdentifierInfo,
+    image: string,
+  ): Promise<ImageInfo | undefined> {
+    const provider = this.dependencies.providers.getProviderContainerConnection(providerConnection);
+
+    const images = await this.dependencies.containers.listImages({
+      provider: provider.connection,
+    });
+
+    if(image.includes(':')) {
+      return images.find(img => img.RepoTags?.some(repo => repo === image));
+    }
+
+    return images.find(img => img.Id === image);
+  }
+
   protected toSimpleImageInfo(
     imageInfo: ImageInfo,
     connection: ProviderContainerConnectionIdentifierInfo,

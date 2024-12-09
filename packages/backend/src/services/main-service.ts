@@ -12,6 +12,7 @@ import type {
   window,
   cli as cliApi,
   containerEngine,
+  navigation as navigationApi,
 } from '@podman-desktop/api';
 import { WebviewService } from './webview-service';
 import { RpcExtension } from '/@shared/src/messages/MessageProxy';
@@ -49,6 +50,7 @@ interface Dependencies {
   cliApi: typeof cliApi;
   commandsApi: typeof commandsApi;
   containers: typeof containerEngine;
+  navigationApi: typeof navigationApi;
 }
 
 export class MainService implements Disposable, AsyncInit {
@@ -80,6 +82,7 @@ export class MainService implements Disposable, AsyncInit {
     // routing service
     const routing = new RoutingService({
       panel: webview.getPanel(),
+      navigationApi: this.dependencies.navigationApi,
     });
     await routing.init();
     this.#disposables.push(routing);
@@ -200,6 +203,7 @@ export class MainService implements Disposable, AsyncInit {
     // routing api
     const routingApiImpl = new RoutingApiImpl({
       routing: routing,
+      images: images,
     });
     rpcExtension.registerInstance<RoutingApi>(RoutingApi, routingApiImpl);
   }

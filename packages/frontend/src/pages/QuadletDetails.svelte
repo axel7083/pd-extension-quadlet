@@ -5,7 +5,7 @@ import { DetailsPage, Tab } from '@podman-desktop/ui-svelte';
 import { router } from 'tinro';
 import Route from '/@/lib/Route.svelte';
 import { onMount } from 'svelte';
-import { quadletAPI } from '/@/api/client';
+import { quadletAPI, routingAPI } from '/@/api/client';
 import ProgressBar from '/@/lib/progress/ProgressBar.svelte';
 import MonacoEditor from '/@/lib/monaco-editor/MonacoEditor.svelte';
 import QuadletActions from '/@/lib/table/QuadletActions.svelte';
@@ -54,6 +54,23 @@ onMount(async () => {
     loading = false;
   }
 });
+
+async function handleImageGlyph(lineContent: string): Promise<void> {
+  console.log('[handleImageGlyph] for line content' ,lineContent);
+  if(!quadlet) return;
+
+  const [key, value] = lineContent.split('=');
+  if(key !== 'Image') {
+    console.error(`received event for image glyph but line content is invalid got ${lineContent}`);
+    return;
+  }
+
+  // trying navigating to image name
+  return routingAPI.navigateToImage({
+    provider: $state.snapshot(quadlet.connection),
+    image: String(value),
+  });
+}
 </script>
 
 {#if quadlet}
@@ -113,7 +130,12 @@ onMount(async () => {
               {quadlet.path}
             </span>
           </div>
-          <MonacoEditor class="h-full" readOnly content={quadletSource ?? '<unknown>'} language="ini" />
+          <MonacoEditor glyphs={[{
+            regex: '^Image=.*$',
+            classes: 'fa-solid fa-arrow-right-to-bracket glyph-image-name',
+            id: 'quadlet-image',
+            onclick: handleImageGlyph,
+          }]} class="h-full" readOnly content={quadletSource ?? '<unknown>'} language="ini" />
         </Route>
       </div>
     </svelte:fragment>

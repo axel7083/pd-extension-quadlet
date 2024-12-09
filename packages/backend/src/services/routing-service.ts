@@ -2,7 +2,7 @@
  * @author axel7083
  */
 import type { AsyncInit } from '../utils/async-init';
-import type { Disposable, WebviewPanel } from '@podman-desktop/api';
+import type { Disposable, WebviewPanel, navigation } from '@podman-desktop/api';
 import { Publisher } from '../utils/publisher';
 import { Messages } from '/@shared/src/messages';
 import type { ProviderContainerConnectionIdentifierInfo } from '/@shared/src/models/provider-container-connection-identifier-info';
@@ -10,6 +10,7 @@ import { QuadletType } from '/@shared/src/utils/quadlet-type';
 
 interface Dependencies {
   panel: WebviewPanel;
+  navigationApi: typeof navigation,
 }
 
 export class RoutingService extends Publisher<string | undefined> implements Disposable, AsyncInit {
@@ -51,6 +52,14 @@ export class RoutingService extends Publisher<string | undefined> implements Dis
       quadletType: QuadletType.CONTAINER,
     });
     return this.write(`/quadlets/generate?${search.toString()}`);
+  }
+
+  async openImageDetails(id: string, engineId: string, tag: string): Promise<void> {
+    console.log('[RoutingService] openImageDetails', id, engineId, tag);
+    return this.dependencies.navigationApi.navigateToImage(
+      encodeURIComponent(id), encodeURIComponent(engineId), encodeURIComponent(tag)
+    );
+    // return this.dependencies.navigationApi.navigateToImages();
   }
 
   dispose(): void {
