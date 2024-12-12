@@ -9,6 +9,12 @@ import { fileURLToPath } from 'url';
 let filename = fileURLToPath(import.meta.url);
 const PACKAGE_ROOT = path.dirname(filename);
 
+function manualChunks(id) {
+  if (id.includes('monaco-editor')) {
+    return 'monaco-editor';
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   mode: process.env.MODE,
@@ -51,8 +57,14 @@ export default defineConfig({
     sourcemap: true,
     outDir: '../backend/media',
     assetsDir: '.',
-
+    modulePreload: false,
     emptyOutDir: true,
     reportCompressedSize: false,
+    rollupOptions: {
+      output: {
+        manualChunks: manualChunks,
+        inlineDynamicImports: false,
+      }
+    }
   },
 });
