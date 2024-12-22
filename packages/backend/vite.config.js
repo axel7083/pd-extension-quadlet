@@ -1,7 +1,9 @@
 import {join} from 'path';
 import {builtinModules} from 'module';
+import wasm from "vite-plugin-wasm";
 
 const PACKAGE_ROOT = __dirname;
+const CRATES_ROOT = join(__dirname, '..', '..', 'crates');
 
 /**
  * @type {import('vite').UserConfig}
@@ -11,11 +13,13 @@ const config = {
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
   envDir: process.cwd(),
+  plugins: [wasm()],
   resolve: {
     alias: {
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
       '/@gen/': join(PACKAGE_ROOT, 'src-generated') + '/',
       '/@shared/': join(PACKAGE_ROOT, '../shared') + '/',
+      '/@demo/': join(CRATES_ROOT, 'demo', 'pkg') + '/',
     },
   },
   test: {

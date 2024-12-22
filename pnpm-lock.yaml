@@ -94,11 +94,16 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6(@types/node@20.17.10)(jiti@1.21.6)(jsdom@25.0.1)(yaml@2.6.1)
 
+  crates/demo/pkg: {}
+
   packages/backend:
     dependencies:
       '@octokit/rest':
         specifier: ^21.0.2
         version: 21.0.2
+      demo-wasm-pack:
+        specifier: workspace:*
+        version: link:../../crates/demo/pkg
       js-ini:
         specifier: ^1.6.0
         version: 1.6.0
@@ -114,6 +119,9 @@ importers:
       unzipper:
         specifier: ^0.11.6
         version: 0.11.6
+      vite-plugin-wasm:
+        specifier: ^3.4.1
+        version: 3.4.1(vite@6.0.4(@types/node@20.17.9)(jiti@1.21.6)(yaml@2.6.1))
     devDependencies:
       '@podman-desktop/api':
         specifier: ^1.15.0
@@ -3588,6 +3596,11 @@ packages:
     resolution: {integrity: sha512-DBfJY0n9JUwnyLxPSSUmEePT21j8JZp/sR9n+/gBwQU6DcQOioPdb8/pibWfXForbirSagZCilseYIwaL3f95A==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
+
+  vite-plugin-wasm@3.4.1:
+    resolution: {integrity: sha512-ja3nSo2UCkVeitltJGkS3pfQHAanHv/DqGatdI39ja6McgABlpsZ5hVgl6wuR8Qx5etY3T5qgDQhOWzc5RReZA==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5 || ^6
 
   vite@6.0.4:
     resolution: {integrity: sha512-zwlH6ar+6o6b4Wp+ydhtIKLrGM/LoqZzcdVmkGAFun0KHTzIzjh+h0kungEx7KJg/PYnC80I4TII9WkjciSR6Q==}
@@ -7482,6 +7495,10 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  vite-plugin-wasm@3.4.1(vite@6.0.4(@types/node@20.17.9)(jiti@1.21.6)(yaml@2.6.1)):
+    dependencies:
+      vite: 6.0.4(@types/node@20.17.9)(jiti@1.21.6)(yaml@2.6.1)
 
   vite@6.0.4(@types/node@20.17.10)(jiti@1.21.6)(yaml@2.6.1):
     dependencies:

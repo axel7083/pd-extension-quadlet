@@ -1,9 +1,11 @@
 import path from 'node:path';
 import { join } from 'path';
+import wasm from "vite-plugin-wasm";
 
 const PACKAGE_ROOT = __dirname;
 
 const config = {
+  plugins: [wasm()],
   test: {
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)', '../shared/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     coverage: {
