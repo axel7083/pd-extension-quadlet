@@ -120,7 +120,7 @@ importers:
         version: 1.15.0
       '@podman-desktop/podman-extension-api':
         specifier: next
-        version: 1.16.0-202412200641-918b8102b36
+        version: 1.16.0-202412232230-69b4f8a14df
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -1192,11 +1192,11 @@ packages:
   '@podman-desktop/api@1.15.0':
     resolution: {integrity: sha512-rYI2Fh/fRfNKtZAIz3OCk3GITJq5+oNxgU4aYVRWmPaX4Y5TSQoGr30Wwu4MGy02IQp3KY18JNe9/msWUE1MJA==}
 
-  '@podman-desktop/api@1.16.0-202412200641-918b8102b36':
-    resolution: {integrity: sha512-Y5M2B5/+Tu52wodEp3hM5KsyEemR8zytT2IgWoPb9O3eUz3o1SSuEk8vP21TYEjfyE6DXO1erigDyqBLnZ1fWQ==}
+  '@podman-desktop/api@1.16.0-202412232230-69b4f8a14df':
+    resolution: {integrity: sha512-RnPs8IvmIiLj70jf5dZanwv9r+ciq7hSbEvD198lf+TywZbvG5BTep5H1bToMBY/YohS0pS8XPVNYTVUZ6rj8w==}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202412200641-918b8102b36':
-    resolution: {integrity: sha512-nUu2kocldAAhXxlPIatHFk5FKlva0EJJ4TzUuO4IBJA548ARK5e9GFXx+4IpTDGMjjAHm0p43yRcRTvzlKLfoQ==}
+  '@podman-desktop/podman-extension-api@1.16.0-202412232230-69b4f8a14df':
+    resolution: {integrity: sha512-fEKhgdD748WOrAbRzdSwFu5s7nEmK3Ou+q6uimJV7lXXiOxEPYojMjT7PW0I4qf+BJyWs+HZkg+Hy0UPoX/lXg==}
 
   '@podman-desktop/ui-svelte@1.15.0-202412031339-936cb90e72b':
     resolution: {integrity: sha512-A7K7K0Rr/6JucjqF17WYpbygfmDkphvDfGjq0vK/KJBkh5s3k7i1BXfxFKfjWltf2hcqVLHZIavHky/FM6gGHw==}
@@ -4793,11 +4793,11 @@ snapshots:
 
   '@podman-desktop/api@1.15.0': {}
 
-  '@podman-desktop/api@1.16.0-202412200641-918b8102b36': {}
+  '@podman-desktop/api@1.16.0-202412232230-69b4f8a14df': {}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202412200641-918b8102b36':
+  '@podman-desktop/podman-extension-api@1.16.0-202412232230-69b4f8a14df':
     dependencies:
-      '@podman-desktop/api': 1.16.0-202412200641-918b8102b36
+      '@podman-desktop/api': 1.16.0-202412232230-69b4f8a14df
 
   '@podman-desktop/ui-svelte@1.15.0-202412031339-936cb90e72b(svelte-fa@4.0.3(svelte@5.15.0))(svelte@5.15.0)':
     dependencies:
