@@ -51,7 +51,7 @@
     "eslint-plugin-unicorn": "^56.0.1",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.2.6",
-    "svelte": "5.16.0",
+    "svelte": "5.16.1",
     "svelte-check": "^4.1.1",
     "svelte-eslint-parser": "^0.43.0",
     "typescript": "5.7.2",
