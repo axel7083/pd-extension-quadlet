@@ -16,11 +16,18 @@
  * SPDX-License-Identifier: Apache-2.0
  ***********************************************************************/
 
-import type { Page } from '@playwright/test';
-import { ExtensionDetailsPage } from '@podman-desktop/tests-playwright';
+import type { Locator, Page } from '@playwright/test';
 
-export class PodmanExtensionQuadletDetailsPage extends ExtensionDetailsPage {
-  constructor(page: Page) {
-    super(page, 'Podman Quadlet');
+export abstract class QuadletBasePage {
+  readonly page: Page;
+  readonly webview: Page;
+  readonly heading: Locator;
+
+  protected constructor(page: Page, webview: Page, heading: string | undefined) {
+    this.page = page;
+    this.webview = webview;
+    this.heading = webview.getByRole('heading', { name: heading, exact: true }).first();
   }
+
+  abstract waitForLoad(): Promise<void>;
 }
