@@ -94,17 +94,20 @@ jobs:
           ref: main
           path: podman-desktop
 
-      - name: Update podman
+      - name: Update podman to 5.x
         run: |
-          # ubuntu version from kubic repository to install podman we need (v5)
-          ubuntu_version='23.04'
+          echo "ubuntu version from kubic repository to install podman we need (v5)"
+          ubuntu_version='23.10'
+          echo "Add unstable kubic repo into list of available sources and get the repo key"
           sudo sh -c "echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list"
           curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/Release.key" | sudo apt-key add -
-          # install necessary dependencies for criu package which is not part of 23.04
+          echo "install necessary dependencies for criu package which is not part of ${ubuntu_version}"
           sudo apt-get install -qq libprotobuf32t64 python3-protobuf libnet1
-          # install criu manually from static location
+          echo "install criu manually from static location"
           curl -sLO http://cz.archive.ubuntu.com/ubuntu/pool/universe/c/criu/criu_3.16.1-2_amd64.deb && sudo dpkg -i criu_3.16.1-2_amd64.deb
+          echo "Updating all dependencies..."
           sudo apt-get update -qq
+          echo "installing/update podman package..."
           sudo apt-get -qq -y install podman || { echo "Start fallback steps for podman nightly installation from a static mirror" && \
             sudo sh -c "echo 'deb http://ftp.lysator.liu.se/pub/opensuse/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list" && \
             curl -L "http://ftp.lysator.liu.se/pub/opensuse/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/Release.key" | sudo apt-key add - && \
@@ -116,6 +119,15 @@ jobs:
         run: |
           # allow unprivileged user namespace
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Set cgroup_manager to 'cgroupfs' instead of systemd
+        run: |
+          mkdir -p ~/.config/containers
+          cat <<EOT >> ~/.config/containers/containers.conf
+          [engine]
+          cgroup_manager="cgroupfs"
+          EOT
+          podman info
 
       - name: Install pnpm deps and build Podman Desktop
         working-directory: ./podman-desktop
