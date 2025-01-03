@@ -67,3 +67,98 @@ jobs:
             echo "Found changes in git"
             exit 1
           fi
+
+  e2e-pr-check:
+    name: e2e tests smoke
+    runs-on: ubuntu-24.04
+    env:
+      SKIP_INSTALLATION: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: pd-extension-quadlet
+      # Set up pnpm
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+          package_json_file: ./pd-extension-quadlet/package.json
+      # Install Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Checkout podman desktop
+      - uses: actions/checkout@v4
+        with:
+          repository: containers/podman-desktop
+          ref: main
+          path: podman-desktop
+
+      - name: Update podman to 5.x
+        run: |
+          echo "ubuntu version from kubic repository to install podman we need (v5)"
+          ubuntu_version='23.10'
+          echo "Add unstable kubic repo into list of available sources and get the repo key"
+          sudo sh -c "echo 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list"
+          curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/Release.key" | sudo apt-key add -
+          echo "install necessary dependencies for criu package which is not part of ${ubuntu_version}"
+          sudo apt-get install -qq libprotobuf32t64 python3-protobuf libnet1
+          echo "install criu manually from static location"
+          curl -sLO http://cz.archive.ubuntu.com/ubuntu/pool/universe/c/criu/criu_3.16.1-2_amd64.deb && sudo dpkg -i criu_3.16.1-2_amd64.deb
+          echo "Updating all dependencies..."
+          sudo apt-get update -qq
+          echo "installing/update podman package..."
+          sudo apt-get -qq -y install podman || { echo "Start fallback steps for podman nightly installation from a static mirror" && \
+            sudo sh -c "echo 'deb http://ftp.lysator.liu.se/pub/opensuse/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list" && \
+            curl -L "http://ftp.lysator.liu.se/pub/opensuse/repositories/devel:/kubic:/libcontainers:/unstable/xUbuntu_${ubuntu_version}/Release.key" | sudo apt-key add - && \
+            sudo apt-get update && \
+            sudo apt-get -y install podman; }
+          podman version
+
+      - name: Revert unprivileged user namespace restrictions in Ubuntu 24.04
+        run: |
+          # allow unprivileged user namespace
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Set cgroup_manager to 'cgroupfs' instead of systemd
+        run: |
+          mkdir -p ~/.config/containers
+          cat <<EOT >> ~/.config/containers/containers.conf
+          [engine]
+          cgroup_manager="cgroupfs"
+          EOT
+          podman info
+
+      - name: Install pnpm deps and build Podman Desktop
+        working-directory: ./podman-desktop
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm test:e2e:build
+
+      - name: Execute pnpm in Podman Quadlet Extension
+        working-directory: ./pd-extension-quadlet
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Image
+        working-directory: ./pd-extension-quadlet
+        id: build-image
+        run: |
+          podman build -t local_image ./
+          CONTAINER_ID=$(podman create localhost/local_image --entrypoint "")
+          mkdir -p tests/playwright/tests/playwright/output/pd-extension-quadlet-tests/plugins
+          podman export $CONTAINER_ID | tar -x -C tests/playwright/tests/playwright/output/pd-extension-quadlet-tests/plugins/
+          podman rm -f $CONTAINER_ID
+          podman rmi -f localhost/local_image:latest
+
+      - name: Run E2E Smoke tests
+        working-directory: ./pd-extension-quadlet
+        env:
+          PODMAN_DESKTOP_ARGS: ${{ github.workspace }}/podman-desktop
+          EXTENSION_PREINSTALLED: true
+        run: pnpm test:e2e:smoke
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-pr-check
+          path: ./**/tests/**/output/

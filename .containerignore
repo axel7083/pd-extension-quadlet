@@ -1,1 +1,5 @@
 node_modules
+tests
+examples
+.github
+images
