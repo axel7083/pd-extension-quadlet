@@ -1,0 +1,22 @@
+{
+  "name": "podman-quadlet-tests-playwright",
+  "version": "0.5.0-next",
+  "description": "Podman Qualdet extension Playwright E2E tests",
+  "scripts": {
+    "test:e2e:setup": "xvfb-maybe --auto-servernum --server-args='-screen 0 1280x960x24' --",
+    "test:e2e": "npm run test:e2e:setup playwright test src/",
+    "test:e2e:smoke": "npm run test:e2e:setup playwright test src/ --grep @smoke"
+  },
+  "publisher": "axel7083",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@podman-desktop/tests-playwright": "1.15.0",
+    "@types/node": "^20",
+    "electron": "^33.2.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "xvfb-maybe": "^0.2.1"
+  },
+  "type": "module"
+}
