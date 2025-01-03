@@ -120,7 +120,7 @@ importers:
         version: 1.15.0
       '@podman-desktop/podman-extension-api':
         specifier: next
-        version: 1.16.0-202501021304-c0227fdd152
+        version: 1.16.0-202501030524-2187c7ca4a3
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -1198,11 +1198,11 @@ packages:
   '@podman-desktop/api@1.15.0':
     resolution: {integrity: sha512-rYI2Fh/fRfNKtZAIz3OCk3GITJq5+oNxgU4aYVRWmPaX4Y5TSQoGr30Wwu4MGy02IQp3KY18JNe9/msWUE1MJA==}
 
-  '@podman-desktop/api@1.16.0-202501021304-c0227fdd152':
-    resolution: {integrity: sha512-VOy1eda36MPVw3nxQ5tZYQ+xWJKVxorA5sq3lhWSFvF5x+szcTJiOUc1szQCGsAcfJ1ccvTO+SPGrpUuz/KkbA==}
+  '@podman-desktop/api@1.16.0-202501030524-2187c7ca4a3':
+    resolution: {integrity: sha512-qtY8lhRs/jM0daEKyK6t/p1atZvIDvBH0u0FB9xi7fcCrRds6oj36EViWLTs76CkHcqSzWKdwYKt6bCQ2GtLMQ==}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501021304-c0227fdd152':
-    resolution: {integrity: sha512-wMCcoq3ieAnJ2qW/VWjhUlrGk1m/18y7bYv6QqxIcA+J+myVzam9EVfTwU3q/OqDxrTm03vWTh/VKKkP7vYCSw==}
+  '@podman-desktop/podman-extension-api@1.16.0-202501030524-2187c7ca4a3':
+    resolution: {integrity: sha512-+SRc+gKMs8RSSQq2DY9S4/VJJhTujPhNJRO1kjmxQYG95NaIgvXMXwMkJGOvdjToeFDQ8j4sE5mpPmRTVM3+rA==}
 
   '@podman-desktop/ui-svelte@1.15.0-202412031339-936cb90e72b':
     resolution: {integrity: sha512-A7K7K0Rr/6JucjqF17WYpbygfmDkphvDfGjq0vK/KJBkh5s3k7i1BXfxFKfjWltf2hcqVLHZIavHky/FM6gGHw==}
@@ -1373,9 +1373,6 @@ packages:
 
   '@types/marked@5.0.2':
     resolution: {integrity: sha512-OucS4KMHhFzhz27KxmWg7J+kIYqyqoW5kdIEI319hqARQQUTqhao3M/F+uFnDXD0Rg72iDDZxZNxq5gvctmLlg==}
-
-  '@types/node@20.17.10':
-    resolution: {integrity: sha512-/jrvh5h6NXhEauFFexRin69nA0uHJ5gwk4iDivp/DeoEua3uwCUto6PC86IpRITBOs4+6i2I56K5x5b6WYGXHA==}
 
   '@types/node@20.17.11':
     resolution: {integrity: sha512-Ept5glCK35R8yeyIeYlRIZtX6SLRyqMhOFTgj5SOkMpLTdw3SEHI9fHx60xaUZ+V1aJxQJODE+7/j5ocZydYTg==}
@@ -4849,11 +4846,11 @@ snapshots:
 
   '@podman-desktop/api@1.15.0': {}
 
-  '@podman-desktop/api@1.16.0-202501021304-c0227fdd152': {}
+  '@podman-desktop/api@1.16.0-202501030524-2187c7ca4a3': {}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501021304-c0227fdd152':
+  '@podman-desktop/podman-extension-api@1.16.0-202501030524-2187c7ca4a3':
     dependencies:
-      '@podman-desktop/api': 1.16.0-202501021304-c0227fdd152
+      '@podman-desktop/api': 1.16.0-202501030524-2187c7ca4a3
 
   '@podman-desktop/ui-svelte@1.15.0-202412031339-936cb90e72b(svelte-fa@4.0.3(svelte@5.16.0))(svelte@5.16.0)':
     dependencies:
@@ -5001,10 +4998,6 @@ snapshots:
 
   '@types/marked@5.0.2': {}
 
-  '@types/node@20.17.10':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/node@20.17.11':
     dependencies:
       undici-types: 6.19.8
@@ -5019,7 +5012,7 @@ snapshots:
 
   '@types/tar-fs@2.0.4':
     dependencies:
-      '@types/node': 20.17.10
+      '@types/node': 20.17.11
       '@types/tar-stream': 3.1.3
 
   '@types/tar-stream@3.1.3':
@@ -5028,7 +5021,7 @@ snapshots:
 
   '@types/unzipper@0.10.10':
     dependencies:
-      '@types/node': 20.17.10
+      '@types/node': 20.17.11
 
   '@types/yargs-parser@21.0.3': {}
 
