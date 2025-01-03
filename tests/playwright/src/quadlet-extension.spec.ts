@@ -5,6 +5,7 @@ import {
   test,
   RunnerOptions,
   waitForPodmanMachineStartup,
+  isLinux,
 } from '@podman-desktop/tests-playwright';
 import { PdQuadletDetailsPage } from './model/pd-quadlet-details-page';
 import { QuadletListPage } from './model/quadlet-list-page';
@@ -136,7 +137,7 @@ test.describe.serial(`Podman Quadlet extension installation and verification`, {
       await playExpect(generateForm.generateButton).toBeDisabled(); // default should be disabled
 
       // select container engine
-      await generateForm.containerEngineSelect.fill('podman-machine-default');
+      await generateForm.containerEngineSelect.fill(isLinux ? 'podman' : 'podman-machine-default');
       await generateForm.webview.keyboard.press('Enter');
 
       // todo: do something better ? trying to wait for loading to finish?
