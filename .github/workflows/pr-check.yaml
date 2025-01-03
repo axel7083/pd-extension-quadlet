@@ -123,6 +123,10 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm test:e2e:build
 
+      - name: Execute pnpm in Podman Quadlet Extension
+        working-directory: ./pd-extension-quadlet
+        run: pnpm install --no-frozen-lockfile
+
       - name: Build Image
         working-directory: ./pd-extension-quadlet
         id: build-image
