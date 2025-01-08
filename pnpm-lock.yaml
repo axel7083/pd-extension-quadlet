@@ -120,7 +120,7 @@ importers:
         version: 1.15.0
       '@podman-desktop/podman-extension-api':
         specifier: next
-        version: 1.16.0-202501070757-7729cfdf4f7
+        version: 1.16.0-202501071621-8651bb163c5
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -189,8 +189,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(svelte@5.16.5)(vite@6.0.7(@types/node@20.17.12)(jiti@1.21.6)(yaml@2.6.1))
       '@tailwindcss/typography':
-        specifier: ^0.5.14
-        version: 0.5.15(tailwindcss@3.4.17)
+        specifier: ^0.5.16
+        version: 0.5.16(tailwindcss@3.4.17)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -1369,11 +1369,11 @@ packages:
   '@podman-desktop/api@1.15.0':
     resolution: {integrity: sha512-rYI2Fh/fRfNKtZAIz3OCk3GITJq5+oNxgU4aYVRWmPaX4Y5TSQoGr30Wwu4MGy02IQp3KY18JNe9/msWUE1MJA==}
 
-  '@podman-desktop/api@1.16.0-202501070757-7729cfdf4f7':
-    resolution: {integrity: sha512-Xw+DNC8RvVQJNJL1p3FaSMA43h2Hdp2G6y57NPgaemy6EuNSaZQ035QwChMaV+qcM99Ms9dYreVGdkt0DUAybg==}
+  '@podman-desktop/api@1.16.0-202501071621-8651bb163c5':
+    resolution: {integrity: sha512-fHM27q6jnt16QkKyJcOHQ+jaYduBMWffkge/LQKfq8BP6MHPToImjAaH2dbAVHL1ID3XQ+/GkFq1Z1lky5n7qg==}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501070757-7729cfdf4f7':
-    resolution: {integrity: sha512-SOAW/mr5IYYhWQpqY3tFRAa3HKRooQP+THZDZjyM7hHSt7X3geRmfFObUdvZUb/C7RZOPGUY2TJ1ycBSYoid+Q==}
+  '@podman-desktop/podman-extension-api@1.16.0-202501071621-8651bb163c5':
+    resolution: {integrity: sha512-ZhxeI/GYEd6NyFcXeUR3tBJDCV3IilJpVEqwMltqaBheIfYj+DVP4h1c6dOCQDn3ghU+PNs2SNL+NfZ1smPQCQ==}
 
   '@podman-desktop/tests-playwright@1.15.0':
     resolution: {integrity: sha512-lDNHSr6dKaECuqwtpjDJRX/2SYYvK3o6uTQv1lMzuG3+99C27MqjgBPMcCvCYhFCT7BQDMZ9nJxeMlQsa2rJUg==}
@@ -1500,10 +1500,10 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tailwindcss/typography@0.5.15':
-    resolution: {integrity: sha512-AqhlCXl+8grUz8uqExv5OTtgpjuVIwFTSXTrh8y9/pw6q2ek7fJ+Y8ZEVw7EB2DCcuCOtEjf9w3+J3rzts01uA==}
+  '@tailwindcss/typography@0.5.16':
+    resolution: {integrity: sha512-0wDLwCVF5V3x3b1SGXPCDcdsbDHMBe+lkFzBRaHeLvNi+nrrnZ1lA18u+OTWO8iSWU2GxUOCvlXtDuqftc1oiA==}
     peerDependencies:
-      tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20'
+      tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -5441,11 +5441,11 @@ snapshots:
 
   '@podman-desktop/api@1.15.0': {}
 
-  '@podman-desktop/api@1.16.0-202501070757-7729cfdf4f7': {}
+  '@podman-desktop/api@1.16.0-202501071621-8651bb163c5': {}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501070757-7729cfdf4f7':
+  '@podman-desktop/podman-extension-api@1.16.0-202501071621-8651bb163c5':
     dependencies:
-      '@podman-desktop/api': 1.16.0-202501070757-7729cfdf4f7
+      '@podman-desktop/api': 1.16.0-202501071621-8651bb163c5
 
   '@podman-desktop/tests-playwright@1.15.0': {}
 
@@ -5544,7 +5544,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tailwindcss/typography@0.5.15(tailwindcss@3.4.17)':
+  '@tailwindcss/typography@0.5.16(tailwindcss@3.4.17)':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
