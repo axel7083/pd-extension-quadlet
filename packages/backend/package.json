@@ -70,7 +70,7 @@
     "@types/unzipper": "^0.10.10",
     "@vitest/coverage-v8": "^2.1.6",
     "prettier": "^3.4.2",
-    "typescript": "5.7.2",
+    "typescript": "5.7.3",
     "vite": "^6.0.7",
     "vitest": "^2.1.6",
     "xz-decompress": "^0.2.2",
