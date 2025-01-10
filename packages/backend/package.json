@@ -77,7 +77,7 @@
     "@types/js-yaml": "^4.0.9"
   },
   "dependencies": {
-    "@octokit/rest": "^21.0.2",
+    "@octokit/rest": "^21.1.0",
     "js-ini": "^1.6.0",
     "semver": "^7.6.3",
     "tar-fs": "^3.0.6",
