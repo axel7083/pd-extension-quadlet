@@ -76,8 +76,8 @@ importers:
         specifier: 5.16.5
         version: 5.16.5
       svelte-check:
-        specifier: ^4.1.1
-        version: 4.1.1(svelte@5.16.5)(typescript@5.7.2)
+        specifier: ^4.1.3
+        version: 4.1.3(svelte@5.16.5)(typescript@5.7.2)
       svelte-eslint-parser:
         specifier: ^0.43.0
         version: 0.43.0(svelte@5.16.5)
@@ -120,7 +120,7 @@ importers:
         version: 1.15.0
       '@podman-desktop/podman-extension-api':
         specifier: next
-        version: 1.16.0-202501070757-7729cfdf4f7
+        version: 1.16.0-202501092337-eee6716ff81
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -1369,11 +1369,11 @@ packages:
   '@podman-desktop/api@1.15.0':
     resolution: {integrity: sha512-rYI2Fh/fRfNKtZAIz3OCk3GITJq5+oNxgU4aYVRWmPaX4Y5TSQoGr30Wwu4MGy02IQp3KY18JNe9/msWUE1MJA==}
 
-  '@podman-desktop/api@1.16.0-202501070757-7729cfdf4f7':
-    resolution: {integrity: sha512-Xw+DNC8RvVQJNJL1p3FaSMA43h2Hdp2G6y57NPgaemy6EuNSaZQ035QwChMaV+qcM99Ms9dYreVGdkt0DUAybg==}
+  '@podman-desktop/api@1.16.0-202501092337-eee6716ff81':
+    resolution: {integrity: sha512-9H0hzeRQwUG9sJUeknpeUMAXjvaMDHrMBFi2MTgY4Dwi5SEHOVAV341IhoFTeYvW/0dv514M00qzuarIFlJy3g==}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501070757-7729cfdf4f7':
-    resolution: {integrity: sha512-SOAW/mr5IYYhWQpqY3tFRAa3HKRooQP+THZDZjyM7hHSt7X3geRmfFObUdvZUb/C7RZOPGUY2TJ1ycBSYoid+Q==}
+  '@podman-desktop/podman-extension-api@1.16.0-202501092337-eee6716ff81':
+    resolution: {integrity: sha512-o6cc1Tr1SrOaUDWjA93EYmbUNf11h24YEd6uW/CHmY9eJdUcwJSzTkPOmO1HbmWvSGEq3gTOuQw0QsKg4Kn3aQ==}
 
   '@podman-desktop/tests-playwright@1.15.0':
     resolution: {integrity: sha512-lDNHSr6dKaECuqwtpjDJRX/2SYYvK3o6uTQv1lMzuG3+99C27MqjgBPMcCvCYhFCT7BQDMZ9nJxeMlQsa2rJUg==}
@@ -3792,8 +3792,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  svelte-check@4.1.1:
-    resolution: {integrity: sha512-NfaX+6Qtc8W/CyVGS/F7/XdiSSyXz+WGYA9ZWV3z8tso14V2vzjfXviKaTFEzB7g8TqfgO2FOzP6XT4ApSTUTw==}
+  svelte-check@4.1.3:
+    resolution: {integrity: sha512-IEMoQDH+TrPKwKeIyJim+PU8FxnzQMXsFHR/ldErkHpPXEGHCujHUXiR8jg6qDMqzsif5BbDOUFORltu87ex7g==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -5441,11 +5441,11 @@ snapshots:
 
   '@podman-desktop/api@1.15.0': {}
 
-  '@podman-desktop/api@1.16.0-202501070757-7729cfdf4f7': {}
+  '@podman-desktop/api@1.16.0-202501092337-eee6716ff81': {}
 
-  '@podman-desktop/podman-extension-api@1.16.0-202501070757-7729cfdf4f7':
+  '@podman-desktop/podman-extension-api@1.16.0-202501092337-eee6716ff81':
     dependencies:
-      '@podman-desktop/api': 1.16.0-202501070757-7729cfdf4f7
+      '@podman-desktop/api': 1.16.0-202501092337-eee6716ff81
 
   '@podman-desktop/tests-playwright@1.15.0': {}
 
@@ -8183,7 +8183,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.1.1(svelte@5.16.5)(typescript@5.7.2):
+  svelte-check@4.1.3(svelte@5.16.5)(typescript@5.7.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 4.0.1
